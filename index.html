@@ -7,42 +7,58 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         :root { --accent: #ff914d; --red: #e63946; --dark: #1a1a1a; --gray: #f8f9fa; --wa: #25d366; --tg: #0088cc; }
-        body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--gray); color: #333; padding-bottom: 180px; }
-        header { background: #1a1a1a; color: white; text-align: center; padding: 25px 15px; border-bottom: 6px solid var(--accent); position: relative; }
+        body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--gray); color: #333; padding-bottom: 220px; -webkit-tap-highlight-color: transparent; }
+        
+        header, .promo-footer { background: #1a1a1a; color: white; text-align: center; padding: 25px 15px; border-bottom: 6px solid var(--accent); position: relative; }
+        .promo-footer { border-bottom: none; border-top: 6px solid var(--accent); margin-top: 40px; padding: 30px 15px; }
+        
         .settings-btn { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; opacity: 0.3; color: white; z-index: 100; }
         .logo-circle { width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto 15px; overflow: hidden; border: 3px solid var(--accent); display: flex; align-items: center; justify-content: center; }
         .logo-circle img { width: 100%; height: 100%; object-fit: cover; }
+        
         h1 { margin: 0; font-size: 1.8rem; font-weight: 900; }
         h1 span { color: var(--accent); }
         .intro { font-size: 0.85rem; line-height: 1.4; opacity: 0.95; margin-top: 15px; text-align: left; max-width: 400px; margin: 15px auto 0; white-space: pre-wrap; }
+        
         .container { max-width: 500px; margin: 0 auto; padding: 15px; }
         .label { font-weight: 900; font-size: 0.9rem; text-transform: uppercase; margin: 25px 0 15px; display: flex; align-items: center; }
         .label::before { content: ''; width: 4px; height: 18px; background: var(--accent); margin-right: 10px; }
+        
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .item { background: #fff; padding: 10px; border-radius: 12px; border: 1px solid #ddd; font-size: 0.75rem; position: relative; }
+        .item { background: #fff; padding: 10px; border-radius: 12px; border: 1px solid #ddd; font-size: 0.75rem; position: relative; cursor: pointer; }
         .item.active { border-color: var(--accent); background: #fffcf9; }
+        
         .ctrls { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; background: #f0f0f0; border-radius: 6px; padding: 2px; }
         .btn-s { width: 28px; height: 28px; border: none; background: white; border-radius: 4px; font-weight: 900; cursor: pointer; }
+        
         .card { background: white; border-radius: 15px; padding: 12px; margin-bottom: 15px; border: 2px solid transparent; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .card.active { border-color: var(--accent); }
         .card img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; background: #eee; }
+        
+        .promo-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .promo-grid img { width: 100%; border-radius: 8px; border: 1px solid #444; object-fit: cover; aspect-ratio: 1; }
+
         footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 15px; box-sizing: border-box; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 1000; border-radius: 20px 20px 0 0; }
         .total { font-size: 1.5rem; font-weight: 900; color: var(--red); margin-bottom: 15px; text-align: center; }
         .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .b-ord { text-decoration: none; padding: 12px; border-radius: 10px; text-align: center; color: white; font-weight: 800; font-size: 0.8rem; }
+        .b-ord { text-decoration: none; padding: 14px; border-radius: 10px; text-align: center; color: white; font-weight: 800; font-size: 0.85rem; border: none; cursor: pointer; }
         
         #admin-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
-        .admin-row { background: #f0f0f0; padding: 12px; border-radius: 10px; margin-bottom: 15px; font-size: 0.85rem; }
-        .admin-row input, .admin-row textarea { width: 100%; margin-top: 5px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; font-family: inherit; }
-        .admin-section-title { font-weight: 900; margin: 25px 0 10px; border-bottom: 2px solid var(--accent); padding-bottom: 5px; color: var(--dark); text-transform: uppercase; }
-        .top-edit { display: grid; grid-template-columns: 2fr 1fr 40px; gap: 8px; align-items: center; margin-bottom: 8px; }
+        .admin-row { background: #f0f0f0; padding: 12px; border-radius: 10px; margin-bottom: 15px; font-size: 0.85rem; border: 1px solid #e0e0e0; }
+        .admin-row label { display: block; font-weight: 800; margin-bottom: 5px; color: #555; font-size: 0.7rem; text-transform: uppercase; }
+        .admin-row input, .admin-row textarea { width: 100%; margin-top: 2px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; font-family: inherit; margin-bottom: 10px; }
+        .admin-section-title { font-weight: 900; margin: 30px 0 15px; border-bottom: 3px solid var(--accent); padding-bottom: 5px; color: var(--dark); text-transform: uppercase; font-size: 1.1rem; }
+        .top-edit { display: grid; grid-template-columns: 2fr 1fr 40px; gap: 8px; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .admin-sticky { position: sticky; top: 0; background: white; z-index: 10; padding-bottom: 10px; display: flex; gap: 10px; }
     </style>
 </head>
 <body>
 
 <div id="admin-modal">
-    <button onclick="closeAdmin()" style="width:100%; padding:15px; background:var(--dark); color:white; border:none; border-radius:10px; font-weight:bold; margin-bottom:10px; position: sticky; top: 0; z-index: 10;">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>
-    <button onclick="if(confirm('Сбросить всё к настройкам по умолчанию?')){localStorage.clear(); location.reload();}" style="width:100%; padding:10px; color:red; border:1px solid red; background:none; border-radius:8px; margin-bottom:20px;">🚨 ПОЛНЫЙ СБРОС</button>
+    <div class="admin-sticky">
+        <button onclick="closeAdmin()" style="flex: 2; padding:15px; background:var(--accent); color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">СОХРАНИТЬ ВСЁ</button>
+        <button onclick="document.getElementById('admin-modal').style.display='none'" style="flex: 1; padding:15px; background:var(--dark); color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">ОТМЕНА</button>
+    </div>
     <div id="admin-fields"></div>
 </div>
 
@@ -61,33 +77,39 @@
         <div class="label">🌟 Готовые решения</div>
         <div id="ready-list"></div>
     </div>
-
     <div id="snacks-section">
         <div class="label">🌭 Закуски</div>
         <div id="snacks-list"></div>
     </div>
-
     <div id="desserts-section">
         <div class="label">🍰 Десерты</div>
         <div id="desserts-list"></div>
     </div>
 </div>
 
+<div class="promo-footer">
+    <div id="promo-images" class="promo-grid"></div>
+    <div id="promo-text" class="intro" style="text-align: center; margin: 0 auto;"></div>
+    <p style="font-size: 0.6rem; opacity: 0.5; margin-top: 20px;">© 2026 IvanPizza. Традиции и качество.</p>
+</div>
+
 <footer>
     <div class="total">ИТОГО: <span id="res">0</span>₽</div>
     <div class="btns">
-        <a href="https://t.me/pizzaPrigorodLesnoe" class="b-ord" style="background:var(--tg)">TG ЗАКАЗ</a>
-        <a href="https://wa.me/79997761075" class="b-ord" style="background:var(--wa)">WA ЗАКАЗ</a>
+        <button onclick="sendOrder('tg')" class="b-ord" style="background:var(--tg)">TG ЗАКАЗ</button>
+        <button onclick="sendOrder('wa')" class="b-ord" style="background:var(--wa)">WA ЗАКАЗ</button>
     </div>
 </footer>
 
 <script>
-    const KEY = 'pizza_v23_full_assortment';
+    const KEY = 'ivan_pizza_v29_full_admin';
     
     const DEFAULTS = {
         intro: "Привет соседи!) Меня зовут Иван, предлагаю для Вас пиццу, индивидуальную, на Ваш вкус...",
         label_c: "Собери свою",
-        base: 1000, 
+        base: 1000,
+        promoText: "Готовлю с душой для каждого клиента!",
+        promoImg1: "", promoImg2: "", promoImg3: "",
         tops: [
             {n: "Пепперони", p: 100, q: 0, v: true}, {n: "Салями", p: 100, q: 0, v: true},
             {n: "Бекон", p: 100, q: 0, v: true}, {n: "Ветчина", p: 100, q: 0, v: true},
@@ -101,16 +123,18 @@
             {n: "Соус BBQ", p: 50, q: 0, v: true}, {n: "Зелень", p: 50, q: 0, v: true}
         ],
         ready: [
-            {n: "Карбонара (35см)", p: 1500, a: false, i: "carbonara.jpg", v: true},
-            {n: "Морской коктейль (35см)", p: 1700, a: false, i: "marine.jpg", v: true}
+            {n: "Карбонара (35см)", p: 1500, a: false, i: "", v: true},
+            {n: "", p: 0, a: false, i: "", v: false}, {n: "", p: 0, a: false, i: "", v: false},
+            {n: "", p: 0, a: false, i: "", v: false}, {n: "", p: 0, a: false, i: "", v: false}
         ],
         snacks: [
-            {n: "Корн-Дог", p: 250, i: "corndog.jpg", v: true, q1: 0, q2: 0, s1: "Сырный", s2: "Горчичный"},
-            {n: "Картофель фри", p: 200, i: "", v: false, q1: 0, q2: 0, s1: "Кетчуп", s2: "Сырный"}
+            {n: "Корн-Дог", p: 250, i: "", v: true, q1: 0, q2: 0, s1: "Сырный", s2: "Горчичный"},
+            {n: "", p: 0, i: "", v: false, q1: 0, q2: 0, s1: "Соус 1", s2: "Соус 2"},
+            {n: "", p: 0, i: "", v: false, q1: 0, q2: 0, s1: "Соус 1", s2: "Соус 2"}
         ],
         desserts: [
-            {n: "Тирамису", p: 350, i: "tiramisu.jpg", v: false, q: 0},
-            {n: "Чизкейк", p: 300, i: "cheese.jpg", v: false, q: 0}
+            {n: "Тирамису", p: 350, i: "", v: true, q: 0},
+            {n: "", p: 0, i: "", v: false, q: 0}, {n: "", p: 0, i: "", v: false, q: 0}
         ]
     };
 
@@ -121,61 +145,37 @@
         document.getElementById('main-intro').innerText = s.intro;
         document.getElementById('label-constr').innerText = s.label_c;
         document.getElementById('base-p').innerText = s.base;
+        document.getElementById('promo-text').innerText = s.promoText;
+        
+        let pImgs = "";
+        if(s.promoImg1) pImgs += `<img src="${s.promoImg1}">`;
+        if(s.promoImg2) pImgs += `<img src="${s.promoImg2}">`;
+        if(s.promoImg3) pImgs += `<img src="${s.promoImg3}">`;
+        document.getElementById('promo-images').innerHTML = pImgs;
 
-        // Наполнители
-        document.getElementById('toppings-list').innerHTML = s.tops.filter(t => t.v).map((t, i) => {
-            const realIdx = s.tops.findIndex(x => x.n === t.n);
-            return `<div class="item ${t.q > 0 ? 'active' : ''}" onclick="if(${t.q}===0) addT(${realIdx},1)">
+        document.getElementById('toppings-list').innerHTML = s.tops.filter(t => t.v).map((t) => {
+            const idx = s.tops.findIndex(x => x.n === t.n);
+            return `<div class="item ${t.q > 0 ? 'active' : ''}" onclick="if(${t.q}===0) updateT(${idx},1)">
                 <div style="display:flex; justify-content:space-between"><b>${t.n}</b> <span>${t.p}₽</span></div>
-                ${t.q > 0 ? `<div class="ctrls"><button class="btn-s" onclick="event.stopPropagation(); addT(${realIdx},-1)">-</button><b>${t.q}</b><button class="btn-s" onclick="event.stopPropagation(); addT(${realIdx},1)">+</button></div>` : ''}
+                ${t.q > 0 ? `<div class="ctrls"><button class="btn-s" onclick="event.stopPropagation(); updateT(${idx},-1)">-</button><b>${t.q}</b><button class="btn-s" onclick="event.stopPropagation(); updateT(${idx},1)">+</button></div>` : ''}
             </div>`;
         }).join('');
 
-        // Готовые решения
-        const visibleReady = s.ready.filter(r => r.v);
-        document.getElementById('ready-section').style.display = visibleReady.length ? 'block' : 'none';
-        document.getElementById('ready-list').innerHTML = visibleReady.map((r) => {
-            const realIdx = s.ready.findIndex(x => x.n === r.n);
-            return `<div class="card ${r.a ? 'active' : ''}" onclick="togR(${realIdx})">
-                <img src="${r.i}" onerror="this.src='https://via.placeholder.com/60?text=Pizza'">
-                <div><b>${r.n}</b><br><span style="color:var(--accent)">${r.p}₽</span></div>
-            </div>`;
-        }).join('');
+        const draw = (id, list, type) => {
+            const vis = list.filter(item => item.v && item.n);
+            document.getElementById(id + '-section').style.display = vis.length ? 'block' : 'none';
+            document.getElementById(id + '-list').innerHTML = vis.map(item => {
+                const idx = list.findIndex(x => x === item);
+                if(type==='r') return `<div class="card ${item.a?'active':''}" onclick="toggleR(${idx})"><img src="${item.i}" onerror="this.src='https://via.placeholder.com/60?text=Pizza'"><div style="flex-grow:1"><b>${item.n}</b><br><span style="color:var(--accent)">${item.p}₽</span></div></div>`;
+                if(type==='sn') return `<div class="card" style="display:block"><div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;"><img src="${item.i}" onerror="this.src='https://via.placeholder.com/60?text=Food'"><b>${item.n} (${item.p}₽)</b></div><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px"><span style="font-size:0.8rem">${item.s1}</span><div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upSn(${idx},1,-1)">-</button><b>${item.q1}</b><button class="btn-s" onclick="upSn(${idx},1,1)">+</button></div></div><div style="display:flex; justify-content:space-between; align-items:center"><span style="font-size:0.8rem">${item.s2}</span><div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upSn(${idx},2,-1)">-</button><b>${item.q2}</b><button class="btn-s" onclick="upSn(${idx},2,1)">+</button></div></div></div>`;
+                if(type==='ds') return `<div class="card"><img src="${item.i}" onerror="this.src='https://via.placeholder.com/60?text=Cake'"><div style="flex-grow:1"><b>${item.n}</b><br><span style="color:var(--accent)">${item.p}₽</span></div><div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upDs(${idx},-1)">-</button><b>${item.q}</b><button class="btn-s" onclick="upDs(${idx},1)">+</button></div></div>`;
+            }).join('');
+        };
+        draw('ready', s.ready, 'r'); draw('snacks', s.snacks, 'sn'); draw('desserts', s.desserts, 'ds');
+        updateTotal();
+    }
 
-        // Закуски
-        const visibleSnacks = s.snacks.filter(sn => sn.v);
-        document.getElementById('snacks-section').style.display = visibleSnacks.length ? 'block' : 'none';
-        document.getElementById('snacks-list').innerHTML = visibleSnacks.map((sn) => {
-            const realIdx = s.snacks.findIndex(x => x.n === sn.n);
-            return `<div class="card" style="display:block">
-                <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
-                    <img src="${sn.i}" onerror="this.src='https://via.placeholder.com/60?text=Food'">
-                    <b>${sn.n} (${sn.p}₽)</b>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
-                    <span style="font-size:0.8rem">${sn.s1}</span>
-                    <div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upSn(${realIdx},1,-1)">-</button><b>${sn.q1}</b><button class="btn-s" onclick="upSn(${realIdx},1,1)">+</button></div>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center">
-                    <span style="font-size:0.8rem">${sn.s2}</span>
-                    <div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upSn(${realIdx},2,-1)">-</button><b>${sn.q2}</b><button class="btn-s" onclick="upSn(${realIdx},2,1)">+</button></div>
-                </div>
-            </div>`;
-        }).join('');
-
-        // Десерты
-        const visibleDesserts = s.desserts.filter(d => d.v);
-        document.getElementById('desserts-section').style.display = visibleDesserts.length ? 'block' : 'none';
-        document.getElementById('desserts-list').innerHTML = visibleDesserts.map((d) => {
-            const realIdx = s.desserts.findIndex(x => x.n === d.n);
-            return `<div class="card">
-                <img src="${d.i}" onerror="this.src='https://via.placeholder.com/60?text=Cake'">
-                <div style="flex-grow:1"><b>${d.n}</b><br><span style="color:var(--accent)">${d.p}₽</span></div>
-                <div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upDs(${realIdx},-1)">-</button><b>${d.q}</b><button class="btn-s" onclick="upDs(${realIdx},1)">+</button></div>
-            </div>`;
-        }).join('');
-
-        // Расчет итога
+    function updateTotal() {
         let total = 0, hasT = s.tops.some(t => t.q > 0);
         s.tops.forEach(t => total += t.q * t.p);
         if(hasT) total += parseInt(s.base);
@@ -185,98 +185,103 @@
         document.getElementById('res').innerText = total;
     }
 
-    function addT(i, v) { s.tops[i].q = Math.max(0, s.tops[i].q + v); render(); }
-    function togR(i) { s.ready[i].a = !s.ready[i].a; render(); }
-    function upSn(i, type, v) { if(type===1) s.snacks[i].q1 = Math.max(0, s.snacks[i].q1+v); else s.snacks[i].q2 = Math.max(0, s.snacks[i].q2+v); render(); }
+    function updateT(i, v) { s.tops[i].q = Math.max(0, s.tops[i].q + v); render(); }
+    function toggleR(i) { s.ready[i].a = !s.ready[i].a; render(); }
+    function upSn(i, t, v) { if(t===1) s.snacks[i].q1 = Math.max(0, s.snacks[i].q1+v); else s.snacks[i].q2 = Math.max(0, s.snacks[i].q2+v); render(); }
     function upDs(i, v) { s.desserts[i].q = Math.max(0, s.desserts[i].q + v); render(); }
 
+    function sendOrder(platform) {
+        let msg = "🍕 *НОВЫЙ ЗАКАЗ IVANPIZZA*\n\n";
+        let has = false;
+        if(s.tops.some(t => t.q > 0)) {
+            has = true; msg += `🛠 *КОНСТРУКТОР:*\n`;
+            s.tops.filter(t => t.q > 0).forEach(t => msg += `— ${t.n} (x${t.q})\n`);
+            msg += `_Основа: ${s.base}₽_\n\n`;
+        }
+        const selR = s.ready.filter(r => r.a);
+        if(selR.length) { has = true; msg += "*ГОТОВЫЕ ПИЦЦЫ:*\n"; selR.forEach(r => msg += `— ${r.n}\n`); msg += "\n"; }
+        const selS = s.snacks.filter(sn => sn.q1 > 0 || sn.q2 > 0);
+        if(selS.length) { has = true; msg += "*ЗАКУСКИ:*\n"; selS.forEach(sn => {
+            if(sn.q1 > 0) msg += `— ${sn.n} (${sn.s1}) x${sn.q1}\n`;
+            if(sn.q2 > 0) msg += `— ${sn.n} (${sn.s2}) x${sn.q2}\n`;
+        }); msg += "\n"; }
+        const selD = s.desserts.filter(d => d.q > 0);
+        if(selD.length) { has = true; msg += "*ДЕСЕРТЫ:*\n"; selD.forEach(d => msg += `— ${d.n} x${d.q}\n`); msg += "\n"; }
+        if(!has) return alert("Корзина пуста!");
+        msg += `💰 *ИТОГО: ${document.getElementById('res').innerText}₽*`;
+        const url = platform === 'tg' ? `https://t.me/share/url?url=https://t.me/pizzaPrigorodLesnoe&text=${encodeURIComponent(msg)}` : `https://wa.me/79997761075?text=${encodeURIComponent(msg)}`;
+        window.open(url, '_blank');
+    }
+
     function openAdmin() {
-        let h = `<div class="admin-section-title">ШАПКА</div>
-            <div class="admin-row">Описание:<textarea id="a-intro" rows="3">${s.intro}</textarea></div>
-            <div class="admin-row">Заголовок конструктора:<input type="text" id="a-label-c" value="${s.label_c}"></div>
-            <div class="admin-row">Цена основы:<input type="number" id="a-base" value="${s.base}"></div>
-
-            <div class="admin-section-title">ЗАКУСКИ</div>`;
-        s.snacks.forEach((sn, i) => {
-            h += `<div class="admin-row">
-                Название: <input type="text" id="a-sn-n-${i}" value="${sn.n}">
-                Цена: <input type="number" id="a-sn-p-${i}" value="${sn.p}">
-                Фото: <input type="text" id="a-sn-i-${i}" value="${sn.i}">
-                Доп 1: <input type="text" id="a-sn-s1-${i}" value="${sn.s1}">
-                Доп 2: <input type="text" id="a-sn-s2-${i}" value="${sn.s2}">
-                Вкл: <input type="checkbox" id="a-sn-v-${i}" ${sn.v ? 'checked' : ''} style="width:20px;height:20px">
+        let h = `<div class="admin-section-title">НИЖНИЙ РЕКЛАМНЫЙ БЛОК</div>
+            <div class="admin-row">
+                <label>Рекламный текст в футере:</label><textarea id="a-promoText" rows="3">${s.promoText}</textarea>
+                <label>Фото 1 (ссылка):</label><input id="a-promoImg1" value="${s.promoImg1}">
+                <label>Фото 2 (ссылка):</label><input id="a-promoImg2" value="${s.promoImg2}">
+                <label>Фото 3 (ссылка):</label><input id="a-promoImg3" value="${s.promoImg3}">
+            </div>
+            <div class="admin-section-title">ОСНОВНЫЕ НАСТРОЙКИ</div>
+            <div class="admin-row">
+                <label>Текст в шапке:</label><textarea id="a-intro" rows="3">${s.intro}</textarea>
+                <label>Заголовок конструктора:</label><input id="a-label-c" value="${s.label_c}">
+                <label>Цена основы:</label><input type="number" id="a-base" value="${s.base}">
             </div>`;
+
+        const groups = [
+            {t: "ГОТОВЫЕ ПИЦЦЫ", k: "ready", p: "r"},
+            {t: "ЗАКУСКИ", k: "snacks", p: "sn"},
+            {t: "ДЕСЕРТЫ", k: "desserts", p: "ds"}
+        ];
+        groups.forEach(g => {
+            h += `<div class="admin-section-title">${g.t}</div>`;
+            s[g.k].forEach((item, i) => {
+                h += `<div class="admin-row" ${!item.n ? 'style="border:1px dashed #999"' : ''}>
+                    <label>Название:</label><input id="a-${g.p}-n-${i}" value="${item.n}">
+                    <label>Цена:</label><input type="number" id="a-${g.p}-p-${i}" value="${item.p}">
+                    <label>Ссылка на фото:</label><input id="a-${g.p}-i-${i}" value="${item.i}">`;
+                if(g.k === "snacks") h += `<label>Соус 1:</label><input id="a-sn-s1-${i}" value="${item.s1}"><label>Соус 2:</label><input id="a-sn-s2-${i}" value="${item.s2}">`;
+                h += `<label><input type="checkbox" id="a-${g.p}-v-${i}" ${item.v ? 'checked' : ''}> Видимость в меню</label></div>`;
+            });
         });
 
-        h += `<div class="admin-section-title">ДЕСЕРТЫ</div>`;
-        s.desserts.forEach((d, i) => {
-            h += `<div class="admin-row">
-                Название: <input type="text" id="a-ds-n-${i}" value="${d.n}">
-                Цена: <input type="number" id="a-ds-p-${i}" value="${d.p}">
-                Фото: <input type="text" id="a-ds-i-${i}" value="${d.i}">
-                Вкл: <input type="checkbox" id="a-ds-v-${i}" ${d.v ? 'checked' : ''} style="width:20px;height:20px">
-            </div>`;
-        });
-
-        h += `<div class="admin-section-title">ГОТОВЫЕ РЕШЕНИЯ</div>`;
-        s.ready.forEach((r, i) => {
-            h += `<div class="admin-row">
-                Имя: <input type="text" id="a-rn-${i}" value="${r.n}">
-                Цена: <input type="number" id="a-rp-${i}" value="${r.p}">
-                Фото: <input type="text" id="a-ri-${i}" value="${r.i}">
-                Вкл: <input type="checkbox" id="a-rv-${i}" ${r.v ? 'checked' : ''} style="width:20px;height:20px">
-            </div>`;
-        });
-
-        h += `<div class="admin-section-title">ТОППИНГИ (20 шт)</div>
-            <div style="background:#fff; padding:10px; border-radius:10px; border:1px solid #ccc;">`;
+        h += `<div class="admin-section-title">ТОППИНГИ (20 ПОЗИЦИЙ)</div><div style="background:#fff; padding:10px; border-radius:10px; border:1px solid #ccc;">`;
         s.tops.forEach((t, i) => {
-            h += `<div class="top-edit">
-                <input type="text" id="a-tn-${i}" value="${t.n}">
-                <input type="number" id="a-tp-${i}" value="${t.p}">
-                <input type="checkbox" id="a-tv-${i}" ${t.v ? 'checked' : ''}>
-            </div>`;
+            h += `<div class="top-edit"><input id="a-tn-${i}" value="${t.n}"> <input type="number" id="a-tp-${i}" value="${t.p}"> <input type="checkbox" id="a-tv-${i}" ${t.v ? 'checked' : ''}></div>`;
         });
         h += `</div>`;
-        
+
         document.getElementById('admin-fields').innerHTML = h;
         document.getElementById('admin-modal').style.display = 'block';
     }
 
     function closeAdmin() {
+        s.promoText = document.getElementById('a-promoText').value;
+        s.promoImg1 = document.getElementById('a-promoImg1').value;
+        s.promoImg2 = document.getElementById('a-promoImg2').value;
+        s.promoImg3 = document.getElementById('a-promoImg3').value;
         s.intro = document.getElementById('a-intro').value;
         s.label_c = document.getElementById('a-label-c').value;
-        s.base = document.getElementById('a-base').value;
+        s.base = parseInt(document.getElementById('a-base').value);
         
-        s.snacks.forEach((sn, i) => {
-            sn.n = document.getElementById(`a-sn-n-${i}`).value;
-            sn.p = document.getElementById(`a-sn-p-${i}`).value;
-            sn.i = document.getElementById(`a-sn-i-${i}`).value;
-            sn.s1 = document.getElementById(`a-sn-s1-${i}`).value;
-            sn.s2 = document.getElementById(`a-sn-s2-${i}`).value;
-            sn.v = document.getElementById(`a-sn-v-${i}`).checked;
-        });
-
-        s.desserts.forEach((d, i) => {
-            d.n = document.getElementById(`a-ds-n-${i}`).value;
-            d.p = document.getElementById(`a-ds-p-${i}`).value;
-            d.i = document.getElementById(`a-ds-i-${i}`).value;
-            d.v = document.getElementById(`a-ds-v-${i}`).checked;
-        });
-
-        s.ready.forEach((r, i) => {
-            r.n = document.getElementById(`a-rn-${i}`).value;
-            r.p = document.getElementById(`a-rp-${i}`).value;
-            r.i = document.getElementById(`a-ri-${i}`).value;
-            r.v = document.getElementById(`a-rv-${i}`).checked;
-        });
-
+        const saveGroup = (list, p) => {
+            list.forEach((item, i) => {
+                item.n = document.getElementById(`a-${p}-n-${i}`).value;
+                item.p = parseInt(document.getElementById(`a-${p}-p-${i}`).value);
+                item.i = document.getElementById(`a-${p}-i-${i}`).value;
+                item.v = document.getElementById(`a-${p}-v-${i}`).checked;
+                if(p === 'sn') {
+                    item.s1 = document.getElementById(`a-sn-s1-${i}`).value;
+                    item.s2 = document.getElementById(`a-sn-s2-${i}`).value;
+                }
+            });
+        };
+        saveGroup(s.ready, 'r'); saveGroup(s.snacks, 'sn'); saveGroup(s.desserts, 'ds');
         s.tops.forEach((t, i) => {
             t.n = document.getElementById(`a-tn-${i}`).value;
             t.p = parseInt(document.getElementById(`a-tp-${i}`).value);
             t.v = document.getElementById(`a-tv-${i}`).checked;
         });
-
         document.getElementById('admin-modal').style.display = 'none';
         render();
     }
