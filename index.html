@@ -3,208 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IvanPizza — Крафт Меню</title>
+    <title>IvanPizza — Меню</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         :root { --accent: #ff914d; --red: #e63946; --dark: #1a1a1a; --gray: #f8f9fa; --wa: #25d366; --tg: #0088cc; }
-        body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--gray); color: #333; padding-bottom: 160px; -webkit-tap-highlight-color: transparent; }
-        
-        header { background: var(--dark); color: white; text-align: center; padding: 40px 20px; border-bottom: 6px solid var(--accent); }
-        .logo-circle { width: 90px; height: 90px; background: white; border-radius: 50%; margin: 0 auto 15px; overflow: hidden; border: 3px solid var(--accent); }
+        body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--gray); color: #333; padding-bottom: 180px; }
+        header { background: #1a1a1a; color: white; text-align: center; padding: 25px 15px; border-bottom: 6px solid var(--accent); position: relative; }
+        .settings-btn { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; opacity: 0.3; color: white; z-index: 100; }
+        .logo-circle { width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto 15px; overflow: hidden; border: 3px solid var(--accent); display: flex; align-items: center; justify-content: center; }
         .logo-circle img { width: 100%; height: 100%; object-fit: cover; }
-        h1 { margin: 0; font-size: 2rem; font-weight: 900; letter-spacing: 1px; }
+        h1 { margin: 0; font-size: 1.8rem; font-weight: 900; }
         h1 span { color: var(--accent); }
-        .intro-text { font-size: 0.85rem; line-height: 1.6; max-width: 450px; margin: 15px auto 0; opacity: 0.95; }
-        .base-price-tag { color: var(--accent); font-weight: 800; margin-top: 12px; font-size: 0.9rem; text-transform: uppercase; }
-
+        .intro { font-size: 0.85rem; line-height: 1.4; opacity: 0.95; margin-top: 15px; text-align: left; max-width: 400px; margin: 15px auto 0; white-space: pre-wrap; }
         .container { max-width: 500px; margin: 0 auto; padding: 15px; }
-        .section-label { font-weight: 900; font-size: 0.95rem; text-transform: uppercase; margin: 30px 0 15px; display: flex; align-items: center; color: var(--dark); }
-        .section-label::before { content: ''; width: 4px; height: 20px; background: var(--accent); margin-right: 10px; border-radius: 2px; }
-
-        .tops-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .top-item { background: #fff; padding: 14px; border-radius: 12px; font-size: 0.75rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid #eee; transition: 0.2s; }
-        .top-item.active { background: var(--dark); color: white; border-color: var(--dark); }
-        .top-item small { font-weight: 800; color: var(--accent); margin-left: 5px; }
-
-        .p-card { background: white; border-radius: 20px; padding: 12px; border: 2px solid transparent; display: flex; align-items: center; gap: 15px; margin-bottom: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
-        .p-card.active { border-color: var(--accent); background: #fffaf7; }
-        .p-card img { width: 85px; height: 85px; border-radius: 15px; object-fit: cover; }
-        .p-name { font-weight: 800; font-size: 0.95rem; display: block; margin-bottom: 4px; }
-        .p-price { color: var(--red); font-weight: 900; font-size: 1.1rem; }
-
-        .cnt-btns { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
-        .btn-sq { width: 34px; height: 34px; border-radius: 10px; border: 1px solid #ddd; background: #fff; font-weight: 900; cursor: pointer; }
-
-        #admin-panel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 3000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
-        .admin-item { display: flex; flex-direction: column; gap: 5px; padding: 15px 0; border-bottom: 1px solid #eee; }
-        .admin-row { display: flex; align-items: center; gap: 10px; }
-        .admin-item input[type="text"] { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 5px; }
-        .admin-item input[type="number"] { width: 70px; padding: 8px; border: 1px solid #ddd; border-radius: 5px; }
-
-        footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 15px 20px; box-sizing: border-box; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); z-index: 1000; border-radius: 25px 25px 0 0; }
-        .footer-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .total-price { font-size: 1.8rem; font-weight: 900; color: var(--red); display: flex; align-items: center; gap: 12px; }
-        .btn-gear { background: #f0f0f0; border: none; padding: 10px; border-radius: 12px; font-size: 1.2rem; cursor: pointer; }
+        .label { font-weight: 900; font-size: 0.9rem; text-transform: uppercase; margin: 25px 0 15px; display: flex; align-items: center; }
+        .label::before { content: ''; width: 4px; height: 18px; background: var(--accent); margin-right: 10px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .item { background: #fff; padding: 10px; border-radius: 12px; border: 1px solid #ddd; font-size: 0.75rem; position: relative; }
+        .item.active { border-color: var(--accent); background: #fffcf9; }
+        .ctrls { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; background: #f0f0f0; border-radius: 6px; padding: 2px; }
+        .btn-s { width: 28px; height: 28px; border: none; background: white; border-radius: 4px; font-weight: 900; cursor: pointer; }
+        .card { background: white; border-radius: 15px; padding: 12px; margin-bottom: 15px; border: 2px solid transparent; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .card.active { border-color: var(--accent); }
+        .card img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; background: #eee; }
+        footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 15px; box-sizing: border-box; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 1000; border-radius: 20px 20px 0 0; }
+        .total { font-size: 1.5rem; font-weight: 900; color: var(--red); margin-bottom: 15px; text-align: center; }
+        .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .b-ord { text-decoration: none; padding: 12px; border-radius: 10px; text-align: center; color: white; font-weight: 800; font-size: 0.8rem; }
         
-        .order-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .order-btn { border: none; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 0.85rem; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .btn-tg { background: var(--tg); }
-        .btn-wa { background: var(--wa); }
+        #admin-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .admin-row { background: #f0f0f0; padding: 12px; border-radius: 10px; margin-bottom: 15px; font-size: 0.85rem; }
+        .admin-row input, .admin-row textarea { width: 100%; margin-top: 5px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; font-family: inherit; }
+        .admin-section-title { font-weight: 900; margin: 25px 0 10px; border-bottom: 2px solid var(--accent); padding-bottom: 5px; color: var(--dark); text-transform: uppercase; }
+        .top-edit { display: grid; grid-template-columns: 2fr 1fr 40px; gap: 8px; align-items: center; margin-bottom: 8px; }
     </style>
 </head>
 <body>
 
-<div id="admin-panel">
-    <h2 style="font-weight: 900;">⚙️ Редактор меню</h2>
-    <div id="admin-controls"></div>
-    <button onclick="closeAdmin()" style="width:100%; padding:20px; background:var(--dark); color:white; border:none; border-radius:15px; font-weight:800; margin-top:20px;">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>
+<div id="admin-modal">
+    <button onclick="closeAdmin()" style="width:100%; padding:15px; background:var(--dark); color:white; border:none; border-radius:10px; font-weight:bold; margin-bottom:10px; position: sticky; top: 0; z-index: 10;">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>
+    <button onclick="if(confirm('Сбросить всё к настройкам по умолчанию?')){localStorage.clear(); location.reload();}" style="width:100%; padding:10px; color:red; border:1px solid red; background:none; border-radius:8px; margin-bottom:20px;">🚨 ПОЛНЫЙ СБРОС</button>
+    <div id="admin-fields"></div>
 </div>
 
 <header>
-    <div class="logo-circle"><img src="logo.jpg" onerror="this.src='https://via.placeholder.com/90?text=IvanPizza'"></div>
+    <div class="settings-btn" onclick="openAdmin()">⚙️</div>
+    <div class="logo-circle"><img src="logo.jpg" onerror="this.src='https://via.placeholder.com/80?text=Ivan'"></div>
     <h1>IVAN<span>PIZZA</span></h1>
-    <div class="intro-text">Индивидуальный крафт на Спортивной. Воздушное тесто длительной ферментации, натуральный соус и настоящая Моцарелла без ЗМЖ.</div>
-    <div class="base-price-tag">🍕 ПИЦЦА ОСНОВА 35см ➔ 1000₽</div>
+    <div id="main-intro" class="intro"></div>
 </header>
 
 <div class="container">
-    <div class="section-label">🛠️ СОБЕРИ СВОЮ (НАПОЛНИТЕЛИ)</div>
-    <div id="tops-grid" class="tops-grid"></div>
+    <div class="label">🛠️ <span id="label-constr">Собери свою</span> — <span id="base-p">1000</span>₽</div>
+    <div id="toppings-list" class="grid"></div>
 
-    <div class="section-label">🌟 Готовые решения</div>
-    <div id="ready-list"></div>
+    <div id="ready-section">
+        <div class="label">🌟 Готовые решения</div>
+        <div id="ready-list"></div>
+    </div>
 
-    <div class="section-label">🌭 Закуски</div>
-    <div class="p-card" style="cursor: default;">
-        <img src="corndog.jpg" onerror="this.src='https://via.placeholder.com/85?text=Snack'">
-        <div style="flex:1">
-            <span class="p-name">Корн-Дог (250₽)</span>
-            <div class="cnt-btns">
-                <button class="btn-sq" onclick="changeCD(-1)">-</button>
-                <span id="cd-count" style="font-weight:900;">0</span>
-                <button class="btn-sq" onclick="changeCD(1)">+</button>
-            </div>
-            <select id="sauce-sel" style="margin-top:10px; width:100%; padding:8px; border-radius:8px; border:1px solid #ddd; font-family:inherit;">
-                <option>Сырный соус</option>
-                <option>Горчичный соус</option>
-                <option>Без соуса</option>
-            </select>
-        </div>
+    <div id="snacks-section">
+        <div class="label">🌭 Закуски</div>
+        <div id="snacks-list"></div>
+    </div>
+
+    <div id="desserts-section">
+        <div class="label">🍰 Десерты</div>
+        <div id="desserts-list"></div>
     </div>
 </div>
 
 <footer>
-    <div class="footer-top">
-        <div class="total-price">
-            <button class="btn-gear" onclick="openAdmin()">⚙️</button>
-            <span><span id="total-val">0</span>₽</span>
-        </div>
-    </div>
-    <div class="order-buttons">
-        <button class="order-btn btn-tg" onclick="sendOrder('tg')">ЗАКАЗАТЬ В TG</button>
-        <button class="order-btn btn-wa" onclick="sendOrder('wa')">ЗАКАЗАТЬ В WA</button>
+    <div class="total">ИТОГО: <span id="res">0</span>₽</div>
+    <div class="btns">
+        <a href="https://t.me/pizzaPrigorodLesnoe" class="b-ord" style="background:var(--tg)">TG ЗАКАЗ</a>
+        <a href="https://wa.me/79997761075" class="b-ord" style="background:var(--wa)">WA ЗАКАЗ</a>
     </div>
 </footer>
 
 <script>
-    let state = {
-        base: 1000,
-        cdCount: 0,
-        data: {
-            toppings: [
-                { name: "Пепперони", price: 100, stock: true },
-                { name: "Салями", price: 100, stock: true },
-                { name: "Бекон", price: 100, stock: true },
-                { name: "Ветчина", price: 100, stock: true },
-                { name: "Филе индейки вар.", price: 100, stock: true },
-                { name: "Филе кур.грудки вар.", price: 100, stock: true },
-                { name: "Сыр Российский", price: 100, stock: true },
-                { name: "Сыр Пармезан", price: 100, stock: true },
-                { name: "Сыр Чеддер", price: 100, stock: true },
-                { name: "Бешамель (чеснок)", price: 100, stock: true },
-                { name: "Помидор Черри", price: 100, stock: true },
-                { name: "Помидор", price: 50, stock: true },
-                { name: "Грибы марн", price: 50, stock: true },
-                { name: "Огурцы марн", price: 50, stock: true },
-                { name: "Перец Халапенью", price: 50, stock: true },
-                { name: "Перец Болг слд", price: 50, stock: true },
-                { name: "Лук красный", price: 50, stock: true },
-                { name: "Лук хрустящий", price: 50, stock: true },
-                { name: "Маслины", price: 50, stock: true },
-                { name: "Оливки", price: 50, stock: true }
-            ],
-            ready: [
-                { name: "Карбонара", price: 1500, img: "carbonara.jpg", stock: true },
-                { name: "Морской Коктейль", price: 1500, img: "seafood.jpg", stock: true }
-            ]
-        }
+    const KEY = 'pizza_v23_full_assortment';
+    
+    const DEFAULTS = {
+        intro: "Привет соседи!) Меня зовут Иван, предлагаю для Вас пиццу, индивидуальную, на Ваш вкус...",
+        label_c: "Собери свою",
+        base: 1000, 
+        tops: [
+            {n: "Пепперони", p: 100, q: 0, v: true}, {n: "Салями", p: 100, q: 0, v: true},
+            {n: "Бекон", p: 100, q: 0, v: true}, {n: "Ветчина", p: 100, q: 0, v: true},
+            {n: "Индейка", p: 100, q: 0, v: true}, {n: "Курица", p: 100, q: 0, v: true},
+            {n: "Пармезан", p: 100, q: 0, v: true}, {n: "Чеддер", p: 100, q: 0, v: true},
+            {n: "Помидоры", p: 50, q: 0, v: true}, {n: "Грибы", p: 50, q: 0, v: true},
+            {n: "Халапеньо", p: 50, q: 0, v: true}, {n: "Маслины", p: 50, q: 0, v: true},
+            {n: "Ананасы", p: 50, q: 0, v: true}, {n: "Перец болг.", p: 50, q: 0, v: true},
+            {n: "Кукуруза", p: 50, q: 0, v: true}, {n: "Лук красный", p: 50, q: 0, v: true},
+            {n: "Огурцы мар.", p: 50, q: 0, v: true}, {n: "Чеснок", p: 50, q: 0, v: true},
+            {n: "Соус BBQ", p: 50, q: 0, v: true}, {n: "Зелень", p: 50, q: 0, v: true}
+        ],
+        ready: [
+            {n: "Карбонара (35см)", p: 1500, a: false, i: "carbonara.jpg", v: true},
+            {n: "Морской коктейль (35см)", p: 1700, a: false, i: "marine.jpg", v: true}
+        ],
+        snacks: [
+            {n: "Корн-Дог", p: 250, i: "corndog.jpg", v: true, q1: 0, q2: 0, s1: "Сырный", s2: "Горчичный"},
+            {n: "Картофель фри", p: 200, i: "", v: false, q1: 0, q2: 0, s1: "Кетчуп", s2: "Сырный"}
+        ],
+        desserts: [
+            {n: "Тирамису", p: 350, i: "tiramisu.jpg", v: false, q: 0},
+            {n: "Чизкейк", p: 300, i: "cheese.jpg", v: false, q: 0}
+        ]
     };
 
+    let s = JSON.parse(localStorage.getItem(KEY)) || DEFAULTS;
+
     function render() {
-        const tGrid = document.getElementById('tops-grid');
-        tGrid.innerHTML = state.data.toppings.filter(t => t.stock).map(t => `
-            <div class="top-item" onclick="toggleItem(this)">
-                <span>${t.name}</span><small>${t.price}₽</small>
-            </div>`).join('');
+        localStorage.setItem(KEY, JSON.stringify(s));
+        document.getElementById('main-intro').innerText = s.intro;
+        document.getElementById('label-constr').innerText = s.label_c;
+        document.getElementById('base-p').innerText = s.base;
 
-        const rList = document.getElementById('ready-list');
-        rList.innerHTML = state.data.ready.filter(p => p.stock).map(p => `
-            <div class="p-card" onclick="toggleItem(this)">
-                <img src="${p.img}" onerror="this.style.display='none'">
-                <div class="p-info">
-                    <span class="p-name">${p.name}</span>
-                    <span class="p-price">${p.price}₽</span>
+        // Наполнители
+        document.getElementById('toppings-list').innerHTML = s.tops.filter(t => t.v).map((t, i) => {
+            const realIdx = s.tops.findIndex(x => x.n === t.n);
+            return `<div class="item ${t.q > 0 ? 'active' : ''}" onclick="if(${t.q}===0) addT(${realIdx},1)">
+                <div style="display:flex; justify-content:space-between"><b>${t.n}</b> <span>${t.p}₽</span></div>
+                ${t.q > 0 ? `<div class="ctrls"><button class="btn-s" onclick="event.stopPropagation(); addT(${realIdx},-1)">-</button><b>${t.q}</b><button class="btn-s" onclick="event.stopPropagation(); addT(${realIdx},1)">+</button></div>` : ''}
+            </div>`;
+        }).join('');
+
+        // Готовые решения
+        const visibleReady = s.ready.filter(r => r.v);
+        document.getElementById('ready-section').style.display = visibleReady.length ? 'block' : 'none';
+        document.getElementById('ready-list').innerHTML = visibleReady.map((r) => {
+            const realIdx = s.ready.findIndex(x => x.n === r.n);
+            return `<div class="card ${r.a ? 'active' : ''}" onclick="togR(${realIdx})">
+                <img src="${r.i}" onerror="this.src='https://via.placeholder.com/60?text=Pizza'">
+                <div><b>${r.n}</b><br><span style="color:var(--accent)">${r.p}₽</span></div>
+            </div>`;
+        }).join('');
+
+        // Закуски
+        const visibleSnacks = s.snacks.filter(sn => sn.v);
+        document.getElementById('snacks-section').style.display = visibleSnacks.length ? 'block' : 'none';
+        document.getElementById('snacks-list').innerHTML = visibleSnacks.map((sn) => {
+            const realIdx = s.snacks.findIndex(x => x.n === sn.n);
+            return `<div class="card" style="display:block">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
+                    <img src="${sn.i}" onerror="this.src='https://via.placeholder.com/60?text=Food'">
+                    <b>${sn.n} (${sn.p}₽)</b>
                 </div>
-            </div>`).join('');
-    }
-
-    function toggleItem(el) { el.classList.toggle('active'); calc(); }
-    function changeCD(v) { state.cdCount = Math.max(0, state.cdCount + v); document.getElementById('cd-count').innerText = state.cdCount; calc(); }
-
-    function calc() {
-        let sum = 0;
-        const activeTops = document.querySelectorAll('.top-item.active');
-        if(activeTops.length > 0) {
-            sum += state.base;
-            activeTops.forEach(t => sum += parseInt(t.querySelector('small').innerText));
-        }
-        document.querySelectorAll('.p-card.active').forEach(p => {
-            sum += parseInt(p.querySelector('.p-price').innerText);
-        });
-        sum += (state.cdCount * 250);
-        document.getElementById('total-val').innerText = sum;
-    }
-
-    function openAdmin() {
-        const cont = document.getElementById('admin-controls');
-        let h = '<h4>Наполнители</h4>';
-        state.data.toppings.forEach((t, i) => {
-            h += `<div class="admin-item">
-                <div class="admin-row">
-                    <input type="checkbox" ${t.stock?'checked':''} onchange="state.data.toppings[${i}].stock=this.checked">
-                    <input type="text" value="${t.name}" onchange="state.data.toppings[${i}].name=this.value">
-                    <input type="number" value="${t.price}" onchange="state.data.toppings[${i}].price=parseInt(this.value)">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+                    <span style="font-size:0.8rem">${sn.s1}</span>
+                    <div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upSn(${realIdx},1,-1)">-</button><b>${sn.q1}</b><button class="btn-s" onclick="upSn(${realIdx},1,1)">+</button></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center">
+                    <span style="font-size:0.8rem">${sn.s2}</span>
+                    <div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upSn(${realIdx},2,-1)">-</button><b>${sn.q2}</b><button class="btn-s" onclick="upSn(${realIdx},2,1)">+</button></div>
                 </div>
             </div>`;
+        }).join('');
+
+        // Десерты
+        const visibleDesserts = s.desserts.filter(d => d.v);
+        document.getElementById('desserts-section').style.display = visibleDesserts.length ? 'block' : 'none';
+        document.getElementById('desserts-list').innerHTML = visibleDesserts.map((d) => {
+            const realIdx = s.desserts.findIndex(x => x.n === d.n);
+            return `<div class="card">
+                <img src="${d.i}" onerror="this.src='https://via.placeholder.com/60?text=Cake'">
+                <div style="flex-grow:1"><b>${d.n}</b><br><span style="color:var(--accent)">${d.p}₽</span></div>
+                <div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upDs(${realIdx},-1)">-</button><b>${d.q}</b><button class="btn-s" onclick="upDs(${realIdx},1)">+</button></div>
+            </div>`;
+        }).join('');
+
+        // Расчет итога
+        let total = 0, hasT = s.tops.some(t => t.q > 0);
+        s.tops.forEach(t => total += t.q * t.p);
+        if(hasT) total += parseInt(s.base);
+        s.ready.forEach(r => { if(r.a) total += parseInt(r.p); });
+        s.snacks.forEach(sn => total += (sn.q1 + sn.q2) * parseInt(sn.p));
+        s.desserts.forEach(d => total += d.q * parseInt(d.p));
+        document.getElementById('res').innerText = total;
+    }
+
+    function addT(i, v) { s.tops[i].q = Math.max(0, s.tops[i].q + v); render(); }
+    function togR(i) { s.ready[i].a = !s.ready[i].a; render(); }
+    function upSn(i, type, v) { if(type===1) s.snacks[i].q1 = Math.max(0, s.snacks[i].q1+v); else s.snacks[i].q2 = Math.max(0, s.snacks[i].q2+v); render(); }
+    function upDs(i, v) { s.desserts[i].q = Math.max(0, s.desserts[i].q + v); render(); }
+
+    function openAdmin() {
+        let h = `<div class="admin-section-title">ШАПКА</div>
+            <div class="admin-row">Описание:<textarea id="a-intro" rows="3">${s.intro}</textarea></div>
+            <div class="admin-row">Заголовок конструктора:<input type="text" id="a-label-c" value="${s.label_c}"></div>
+            <div class="admin-row">Цена основы:<input type="number" id="a-base" value="${s.base}"></div>
+
+            <div class="admin-section-title">ЗАКУСКИ</div>`;
+        s.snacks.forEach((sn, i) => {
+            h += `<div class="admin-row">
+                Название: <input type="text" id="a-sn-n-${i}" value="${sn.n}">
+                Цена: <input type="number" id="a-sn-p-${i}" value="${sn.p}">
+                Фото: <input type="text" id="a-sn-i-${i}" value="${sn.i}">
+                Доп 1: <input type="text" id="a-sn-s1-${i}" value="${sn.s1}">
+                Доп 2: <input type="text" id="a-sn-s2-${i}" value="${sn.s2}">
+                Вкл: <input type="checkbox" id="a-sn-v-${i}" ${sn.v ? 'checked' : ''} style="width:20px;height:20px">
+            </div>`;
         });
-        cont.innerHTML = h;
-        document.getElementById('admin-panel').style.display = 'block';
-    }
 
-    function closeAdmin() { document.getElementById('admin-panel').style.display = 'none'; render(); calc(); }
+        h += `<div class="admin-section-title">ДЕСЕРТЫ</div>`;
+        s.desserts.forEach((d, i) => {
+            h += `<div class="admin-row">
+                Название: <input type="text" id="a-ds-n-${i}" value="${d.n}">
+                Цена: <input type="number" id="a-ds-p-${i}" value="${d.p}">
+                Фото: <input type="text" id="a-ds-i-${i}" value="${d.i}">
+                Вкл: <input type="checkbox" id="a-ds-v-${i}" ${d.v ? 'checked' : ''} style="width:20px;height:20px">
+            </div>`;
+        });
 
-    function sendOrder(type) {
-        const total = document.getElementById('total-val').innerText;
-        if(total == "0") return alert("Выберите блюда!");
+        h += `<div class="admin-section-title">ГОТОВЫЕ РЕШЕНИЯ</div>`;
+        s.ready.forEach((r, i) => {
+            h += `<div class="admin-row">
+                Имя: <input type="text" id="a-rn-${i}" value="${r.n}">
+                Цена: <input type="number" id="a-rp-${i}" value="${r.p}">
+                Фото: <input type="text" id="a-ri-${i}" value="${r.i}">
+                Вкл: <input type="checkbox" id="a-rv-${i}" ${r.v ? 'checked' : ''} style="width:20px;height:20px">
+            </div>`;
+        });
+
+        h += `<div class="admin-section-title">ТОППИНГИ (20 шт)</div>
+            <div style="background:#fff; padding:10px; border-radius:10px; border:1px solid #ccc;">`;
+        s.tops.forEach((t, i) => {
+            h += `<div class="top-edit">
+                <input type="text" id="a-tn-${i}" value="${t.n}">
+                <input type="number" id="a-tp-${i}" value="${t.p}">
+                <input type="checkbox" id="a-tv-${i}" ${t.v ? 'checked' : ''}>
+            </div>`;
+        });
+        h += `</div>`;
         
-        if(type === 'tg') {
-            window.location.href = "https://t.me/pizzaPrigorodLesnoe";
-        } else {
-            window.location.href = "https://wa.me/79997761075";
-        }
+        document.getElementById('admin-fields').innerHTML = h;
+        document.getElementById('admin-modal').style.display = 'block';
     }
 
-    render();
+    function closeAdmin() {
+        s.intro = document.getElementById('a-intro').value;
+        s.label_c = document.getElementById('a-label-c').value;
+        s.base = document.getElementById('a-base').value;
+        
+        s.snacks.forEach((sn, i) => {
+            sn.n = document.getElementById(`a-sn-n-${i}`).value;
+            sn.p = document.getElementById(`a-sn-p-${i}`).value;
+            sn.i = document.getElementById(`a-sn-i-${i}`).value;
+            sn.s1 = document.getElementById(`a-sn-s1-${i}`).value;
+            sn.s2 = document.getElementById(`a-sn-s2-${i}`).value;
+            sn.v = document.getElementById(`a-sn-v-${i}`).checked;
+        });
+
+        s.desserts.forEach((d, i) => {
+            d.n = document.getElementById(`a-ds-n-${i}`).value;
+            d.p = document.getElementById(`a-ds-p-${i}`).value;
+            d.i = document.getElementById(`a-ds-i-${i}`).value;
+            d.v = document.getElementById(`a-ds-v-${i}`).checked;
+        });
+
+        s.ready.forEach((r, i) => {
+            r.n = document.getElementById(`a-rn-${i}`).value;
+            r.p = document.getElementById(`a-rp-${i}`).value;
+            r.i = document.getElementById(`a-ri-${i}`).value;
+            r.v = document.getElementById(`a-rv-${i}`).checked;
+        });
+
+        s.tops.forEach((t, i) => {
+            t.n = document.getElementById(`a-tn-${i}`).value;
+            t.p = parseInt(document.getElementById(`a-tp-${i}`).value);
+            t.v = document.getElementById(`a-tv-${i}`).checked;
+        });
+
+        document.getElementById('admin-modal').style.display = 'none';
+        render();
+    }
+    window.onload = render;
 </script>
 </body>
 </html>
