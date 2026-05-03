@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta http-iquiv ="cash-control" content="no-cash, no-stor">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>IvanPizza — Меню</title>
@@ -113,7 +112,7 @@
         ],
         snacks: [
             {n: "Корн-Дог", p: 250, i: "", v: true, q1: 0, q2: 0, s1: "Сырный", s2: "Горчичный"},
-            {n: "", p: 0, i: "", v: false, q1: 0, q2: 0, s1: "Соус 1", s2: "Соус 2"},
+            {n: "Корн-вафли", p: 300, i: "", v: true, q1: 0, q2: 0, s1: "Соус 1", s2: "Соус 2"},
             {n: "", p: 0, i: "", v: false, q1: 0, q2: 0, s1: "Соус 1", s2: "Соус 2"}
         ],
         desserts: [
@@ -153,7 +152,7 @@
             if (listEl) listEl.innerHTML = vis.map(item => {
                 const idx = list.findIndex(x => x === item);
                 if(type==='r') return `<div class="card ${item.a?'active':''}" onclick="toggleR(${idx})"><img src="${item.i}" onerror="this.src='https://via.placeholder.com/60?text=Pizza'"><div style="flex-grow:1"><b>${item.n}</b><br><span style="color:var(--accent)">${item.p}₽</span></div></div>`;
-                if(type==='sn') return `<div class="card" style="display:block"><div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;"><img src="${item.i}" onerror="this.src='https://via.placeholder.com/60?text=Food'"><b>${item.n} (${item.p}₽)</b></div><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px"><span style="font-size:0.8rem">${item.s1}</span><div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upSn(${idx},1,-1)">-</button><b>${item.q1}</b><button class="btn-s" onclick="upSn(${idx},1,1)">+</button></div></div><div style="display:flex; justify-content:space-between; align-items:center"><span style="font-size:0.8rem">${item.s2}</span><div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upSn(${idx},2,-1)">-</button><b>${item.q2}</b><button class="btn-s" onclick="upSn(${idx},2,1)">+</button></div></div></div>`;
+                if(type==='sn') return `<div class="card" style="display:block"><div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;"><img src="${item.i}" onerror="this.src='https://via.placeholder.com/60?text=Food'"><div style="flex-grow:1"><b>${item.n}</b><br><span style="color:var(--accent)">${item.p}₽</span></div></div><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px"><span style="font-size:0.8rem">${item.s1}</span><div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upSn(${idx},1,-1)">-</button><b>${item.q1}</b><button class="btn-s" onclick="upSn(${idx},1,1)">+</button></div></div><div style="display:flex; justify-content:space-between; align-items:center"><span style="font-size:0.8rem">${item.s2}</span><div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upSn(${idx},2,-1)">-</button><b>${item.q2}</b><button class="btn-s" onclick="upSn(${idx},2,1)">+</button></div></div></div>`;
                 if(type==='ds') return `<div class="card"><img src="${item.i}" onerror="this.src='https://via.placeholder.com/60?text=Cake'"><div style="flex-grow:1"><b>${item.n}</b><br><span style="color:var(--accent)">${item.p}₽</span></div><div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upDs(${idx},-1)">-</button><b>${item.q}</b><button class="btn-s" onclick="upDs(${idx},1)">+</button></div></div>`;
             }).join('');
         };
