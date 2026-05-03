@@ -33,6 +33,7 @@
         .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .b-ord { text-decoration: none; padding: 14px; border-radius: 10px; text-align: center; color: white; font-weight: 800; font-size: 0.85rem; border: none; cursor: pointer; }
         
+        /* Стили админки */
         #admin-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
         .admin-row { background: #f0f0f0; padding: 12px; border-radius: 10px; margin-bottom: 15px; font-size: 0.85rem; border: 1px solid #e0e0e0; }
         .admin-row label { display: block; font-weight: 800; margin-bottom: 5px; color: #555; font-size: 0.7rem; text-transform: uppercase; }
@@ -82,22 +83,10 @@
 </footer>
 
 <script>
-    // ПРИНУДИТЕЛЬНЫЙ СБРОС СТАРЫХ ДАННЫХ
-    const KEY = 'ivan_pizza_v4_final_protected'; 
+    const KEY = 'ivan_pizza_v30_final'; 
     
     const DEFAULTS = {
-        adminPass: "1234",
-        intro: "Привет соседи!)
-
-Меня зовут Иван, предлагаю для Вас пиццу, индивидуальную, на Ваш вкус, в основу которой уже входит:
-
-01. Вкусное тесто !!! (личный рецепт, ручной замес, высокоферментированное)
-
-2. Оригинальный томат соус!!! (из зрелых томатов и ароматных трав)
-
-3. Натуральная Моцарелла !!!
-
-(из молока, без ЗМЖ") Вы выбираете по своему желанию и вкусовым предпочтениям наполнители, от 3шт., а я Вам соберу и выпеку Вашу пиццу)",
+        intro: "Привет соседи!) Меня зовут Иван, предлагаю для Вас пиццу...",
         label_c: "ПИЦЦА 35СМ. ОСНОВА",
         base: 1000,
         promoText: "Готовлю с душой для каждого клиента!",
@@ -109,21 +98,21 @@
             {n: "Бекон", p: 100, q: 0, v: true}, {n: "Ветчина", p: 100, q: 0, v: true},
             {n: "Индейка", p: 100, q: 0, v: true}, {n: "Курица", p: 100, q: 0, v: true},
             {n: "Пармезан", p: 100, q: 0, v: true}, {n: "Чеддер", p: 100, q: 0, v: true},
-            {n: "Помидоры", p: 100, q: 0, v: true}, {n: "Черри томат", p: 100, q: 0, v: true},
-            {n: "Оливки", p: 100, q: 0, v: true}, {n: "Маслины", p: 100, q: 0, v: true},
-            {n: "Халапеньо", p: 100, q: 0, v: true}, {n: "Перец болг.", p: 100, q: 0, v: true},
-            {n: "Лук фри", p: 100, q: 0, v: true}, {n: "Лук красный", p: 100, q: 0, v: true},
-            {n: "Огурцы мар.", p: 100, q: 0, v: true}, {n: "Грибы", p: 100, q: 0, v: true},
-            {n: "Соус Бешамель", p: 100, q: 0, v: true}, {n: "Зелень", p: 100, q: 0, v: true}
+            {n: "Помидоры", p: 100, q: 0, v: true}, {n: "Грибы", p: 100, q: 0, v: true},
+            {n: "Халапеньо", p: 100, q: 0, v: true}, {n: "Маслины", p: 100, q: 0, v: true},
+            {n: "Ананасы", p: 100, q: 0, v: true}, {n: "Перец болг.", p: 100, q: 0, v: true},
+            {n: "Кукуруза", p: 100, q: 0, v: true}, {n: "Лук красный", p: 100, q: 0, v: true},
+            {n: "Огурцы мар.", p: 100, q: 0, v: true}, {n: "Чеснок", p: 100, q: 0, v: true},
+            {n: "Соус BBQ", p: 100, q: 0, v: true}, {n: "Зелень", p: 100, q: 0, v: true}
         ],
         ready: [
-            {n: "Карбонара (35см)", p: 1500, a: false, i: "carbonara.jpg", v: true},
-            {n: "Морской коктейль (35см)", p: 1500, a: false, i: "marine.jpg", v: true},
+            {n: "Карбонара (35см)", p: 1500, a: false, i: "", v: true},
+            {n: "Морская (35см)", p: 1700, a: false, i: "", v: true},
             {n: "", p: 0, a: false, i: "", v: false}, {n: "", p: 0, a: false, i: "", v: false}, {n: "", p: 0, a: false, i: "", v: false}
         ],
         snacks: [
-            {n: "Корн-Дог", p: 250, i: "corndog.jpg", v: true, q1: 0, q2: 0, s1: "Сырный", s2: "Горчичный"},
-            {n: "Корн-вафли", p: 300, i: "Waffle.jpg", v: true, q1: 0, q2: 0, s1: "Соус 1", s2: "Соус 2"},
+            {n: "Корн-Дог", p: 250, i: "", v: true, q1: 0, q2: 0, s1: "Сырный", s2: "Горчичный"},
+            {n: "Корн-вафли", p: 300, i: "", v: true, q1: 0, q2: 0, s1: "Соус 1", s2: "Соус 2"},
             {n: "", p: 0, i: "", v: false, q1: 0, q2: 0, s1: "Соус 1", s2: "Соус 2"}
         ],
         desserts: [
@@ -132,15 +121,7 @@
         ]
     };
 
-    let s;
-    try {
-        let saved = localStorage.getItem(KEY);
-        s = saved ? JSON.parse(saved) : DEFAULTS;
-        // Проверка на целостность данных
-        if (!s.tops || !s.adminPass) throw new Error();
-    } catch(e) {
-        s = DEFAULTS;
-    }
+    let s = JSON.parse(localStorage.getItem(KEY)) || DEFAULTS;
 
     function render() {
         localStorage.setItem(KEY, JSON.stringify(s));
@@ -165,11 +146,13 @@
 
         const draw = (id, list, type) => {
             const vis = list.filter(item => item.v && item.n);
-            document.getElementById(id + '-section').style.display = vis.length ? 'block' : 'none';
-            document.getElementById(id + '-list').innerHTML = vis.map(item => {
+            const section = document.getElementById(id + '-section');
+            if (section) section.style.display = vis.length ? 'block' : 'none';
+            const listEl = document.getElementById(id + '-list');
+            if (listEl) listEl.innerHTML = vis.map(item => {
                 const idx = list.findIndex(x => x === item);
                 if(type==='r') return `<div class="card ${item.a?'active':''}" onclick="toggleR(${idx})"><img src="${item.i}" onerror="this.src='https://via.placeholder.com/60?text=Pizza'"><div style="flex-grow:1"><b>${item.n}</b><br><span style="color:var(--accent)">${item.p}₽</span></div></div>`;
-                if(type==='sn') return `<div class="card" style="display:block"><div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;"><img src="${item.i}" onerror="this.src='https://via.placeholder.com/60?text=Food'"><div style="flex-grow:1"><b>${item.n}</b><br><span style="color:var(--accent)">${item.p}₽</span></div></div><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px"><span style="font-size:0.8rem">${item.s1}</span><div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upSn(${idx},1,-1)">-</button><b>${item.q1}</b><button class="btn-s" onclick="upSn(${idx},1,1)">+</button></div></div><div style="display:flex; justify-content:space-between; align-items:center"><span style="font-size:0.8rem">${item.s2}</span><div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upSn(${idx},2,-1)">-</button><b>${item.q2}</b><button class="btn-s" onclick="upSn(${idx},2,1)">+</button></div></div></div>`;
+                if(type==='sn') return `<div class="card" style="display:block"><div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;"><img src="${item.i}" onerror="this.src='https://via.placeholder.com/60?text=Food'"><b>${item.n} <span style="color:var(--red)">(${item.p}₽)</span></b></div><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px"><span style="font-size:0.8rem">${item.s1}</span><div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upSn(${idx},1,-1)">-</button><b>${item.q1}</b><button class="btn-s" onclick="upSn(${idx},1,1)">+</button></div></div><div style="display:flex; justify-content:space-between; align-items:center"><span style="font-size:0.8rem">${item.s2}</span><div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upSn(${idx},2,-1)">-</button><b>${item.q2}</b><button class="btn-s" onclick="upSn(${idx},2,1)">+</button></div></div></div>`;
                 if(type==='ds') return `<div class="card"><img src="${item.i}" onerror="this.src='https://via.placeholder.com/60?text=Cake'"><div style="flex-grow:1"><b>${item.n}</b><br><span style="color:var(--accent)">${item.p}₽</span></div><div class="ctrls" style="width:90px; margin:0"><button class="btn-s" onclick="upDs(${idx},-1)">-</button><b>${item.q}</b><button class="btn-s" onclick="upDs(${idx},1)">+</button></div></div>`;
             }).join('');
         };
@@ -219,15 +202,10 @@
     }
 
     function openAdmin() {
-        const pass = prompt("Введите пароль:");
-        if (pass !== s.adminPass) return alert("Неверный пароль!");
-
-        let h = `<div class="admin-section-title">🔑 Доступ</div>
-            <div class="admin-row"><label>Пароль админки:</label><input id="a-pass" value="${s.adminPass}"></div>
-            <div class="admin-section-title">КОНТАКТЫ</div>
+        let h = `<div class="admin-section-title">КОНТАКТЫ</div>
             <div class="admin-row">
-                <label>Telegram (без @):</label><input id="a-tg" value="${s.tgContact}">
-                <label>WhatsApp (номер):</label><input id="a-wa" value="${s.waContact}">
+                <label>Telegram (ник без @):</label><input id="a-tg" value="${s.tgContact || ''}">
+                <label>WhatsApp (номер без +):</label><input id="a-wa" value="${s.waContact || ''}">
             </div>
             <div class="admin-section-title">ОСНОВНЫЕ НАСТРОЙКИ</div>
             <div class="admin-row">
@@ -235,7 +213,7 @@
                 <label>Цена основы:</label><input type="number" id="a-base" value="${s.base}">
                 <label>Текст конструктора:</label><input id="a-label_c" value="${s.label_c}">
             </div>
-            <div class="admin-section-title">РЕКЛАМА</div>
+            <div class="admin-section-title">РЕКЛАМА В ФУТЕРЕ</div>
             <div class="admin-row">
                 <label>Рекламный текст:</label><textarea id="a-promoText" rows="2">${s.promoText}</textarea>
                 <label>Фото 1 (URL):</label><input id="a-p1" value="${s.promoImg1}">
@@ -260,7 +238,7 @@
             });
         });
 
-        h += `<div class="admin-section-title">ТОППИНГИ</div><div style="background:#fff; padding:10px; border-radius:10px;">`;
+        h += `<div class="admin-section-title">ТОППИНГИ</div><div style="background:#fff; padding:10px; border-radius:10px; border:1px solid #ccc;">`;
         s.tops.forEach((t, i) => {
             h += `<div class="top-edit"><input id="a-tn-${i}" value="${t.n}"> <input type="number" id="a-tp-${i}" value="${t.p}"> <input type="checkbox" id="a-tv-${i}" ${t.v ? 'checked' : ''}></div>`;
         });
@@ -271,7 +249,6 @@
     }
 
     function closeAdmin() {
-        s.adminPass = document.getElementById('a-pass').value;
         s.tgContact = document.getElementById('a-tg').value;
         s.waContact = document.getElementById('a-wa').value;
         s.intro = document.getElementById('a-intro').value;
