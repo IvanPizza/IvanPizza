@@ -26,7 +26,6 @@
         .item.active { border-color: var(--accent); background: #fffcf9; }
         
         .card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 12px; border: 1px solid #eee; }
-        .card.active { border-color: var(--accent); }
         .card-flex { display: flex; align-items: center; gap: 15px; }
         .card img { width: 75px; height: 75px; border-radius: 12px; object-fit: cover; background: #eee; }
         .card-info { flex-grow: 1; }
@@ -55,15 +54,16 @@
         Предлагаю для Вас пиццу, на Ваш вкус, в основу которой уже входит:<br>
         1. Вкусное тесто, ручной замес, ферментированное!!!<br>
         2. Оригинальный томатный соус!!!<br>
-        3. Натуральная Моцарелла, из молока, без ЗМЖ !!!
+        3. Натуральная Моцарелла, из молока без ЗМЖ !!!<br><br>
+        Вы выбираете на свой вкус от 3шт. наполнители, а я соберу и выпеку Вашу идеальную пиццу !)
     </div>
 </header>
 
 <div class="container">
-    <div class="label">🛠️ Собери свою (Основа 1000₽)</div>
+    <div class="label">🍕 Пицца 35 см. Основа — 999₽</div>
     <div id="tops-grid" class="grid"></div>
 
-    <div class="label">🌟 Готовые решения (1500₽)</div>
+    <div class="label">🌟 Готовые решения (35 см)</div>
     <div id="ready-list"></div>
 
     <div class="label">🌭 Закуски и Десерты</div>
@@ -73,8 +73,11 @@
 <div class="info-block">
     <b style="color:var(--accent); text-transform:uppercase; display:block; text-align:center; margin-bottom:15px;">ВНИМАНИЕ</b>
     <p style="font-size:0.85rem; line-height:1.6; opacity:0.8;">
-        Заказ принимается в работу после 100% предоплаты!<br><br>
-        ГОТОВЫЙ ЗАКАЗ ЗАБИРАЕМ: ул. Спортивная д. 1 п.2 подам в окошко. Заказы до 23.00.
+        Готовлю с душой для каждого клиента!<br><br>
+        Заказ принимается в работу после <b>100% предоплаты!</b><br><br>
+        В данный момент работаю по вечерам и в выходные. <br>
+        <b>ГОТОВЫЙ ЗАКАЗ ЗАБИРАЕМ:</b> ул. Спортивная д. 1 п.2 (со двора), подам в окошко. Заказы до 23.00.<br><br>
+        Доставки своей у меня пока нет, но в ПЛ есть много молодых ребят, которые вам доставят за не дорого, обращайтесь к ним на прямую;)
     </p>
 </div>
 
@@ -108,7 +111,7 @@
             </div>`;
         }).join('');
 
-        const rD = [{n:"Карбонара", p:1500, img:"carbonara.jpg"}, {n:"Морской коктейль", p:1500, img:"marine.jpg"}];
+        const rD = [{n:"Карбонара 35см", p:1500, img:"carbonara.jpg"}, {n:"Морской коктейль 35см", p:1500, img:"marine.jpg"}];
         document.getElementById('ready-list').innerHTML = rD.map((item, i) => `
             <div class="card ${cart.ready[i] > 0 ? 'active' : ''}" onclick="upd('ready', ${i}, 1)">
                 <div class="card-flex">
@@ -139,22 +142,35 @@
     function upd(t, i, d) { cart[t][i] = Math.max(0, (cart[t][i] || 0) + d); render(); }
 
     function calc() {
-        let total = 0, hasT = false;
-        for(let i in cart.tops) { if(cart.tops[i]>0) { total += cart.tops[i]*100; hasT = true; } }
-        if(hasT) total += 1000;
+        let total = 0, hasT = false, tCount = 0;
+        for(let i in cart.tops) { if(cart.tops[i]>0) { total += cart.tops[i]*100; tCount += cart.tops[i]; hasT = true; } }
+        if(hasT) total += 999;
         total += (cart.ready[0]*1500) + (cart.ready[1]*1500) + (cart.snacks[0]*250) + (cart.snacks[1]*300);
         document.getElementById('total-val').innerText = total;
+        return tCount;
     }
 
     function send(p) {
         let total = document.getElementById('total-val').innerText;
         if(total === "0") return;
+        
+        let tCount = 0;
         let m = "🍕 *НОВЫЙ ЗАКАЗ IVANPIZZA*\n\n";
         let hasT = false;
-        for(let i in cart.tops) if(cart.tops[i]>0) { m += `▪️ ${TOPS[i].n} x${cart.tops[i]}\n`; hasT = true; }
-        if(hasT) m += `_Основа: 1000₽_\n\n`;
-        if(cart.ready[0]>0) m += `🌟 *Карбонара* x${cart.ready[0]} (1500₽)\n`;
-        if(cart.ready[1]>0) m += `🌟 *Морской коктейль* x${cart.ready[1]} (1500₽)\n`;
+        for(let i in cart.tops) if(cart.tops[i]>0) { 
+            m += `▪️ ${TOPS[i].n} x${cart.tops[i]}\n`; 
+            tCount += cart.tops[i];
+            hasT = true; 
+        }
+        
+        if(hasT && tCount < 3) {
+            alert("Для пиццы выберите минимум 3 наполнителя!");
+            return;
+        }
+
+        if(hasT) m += `_Пицца 35см (основа): 999₽_\n\n`;
+        if(cart.ready[0]>0) m += `🌟 *Карбонара 35см* x${cart.ready[0]} (1500₽)\n`;
+        if(cart.ready[1]>0) m += `🌟 *Морской коктейль 35см* x${cart.ready[1]} (1500₽)\n`;
         if(cart.snacks[0]>0) m += `🌭 *Корн-Дог* x${cart.snacks[0]} (Соус: ${cart.sauce})\n`;
         if(cart.snacks[1]>0) m += `🧇 *Корн-вафли* x${cart.snacks[1]}\n`;
         m += `\n💰 *ИТОГО К ОПЛАТЕ: ${total}₽*`;
