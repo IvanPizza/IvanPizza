@@ -8,7 +8,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root { --accent: #ff914d; --red: #e63946; --dark: #1a1a1a; --gray: #f4f4f4; --tg: #0088cc; --wa: #25d366; }
-        body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--gray); color: #333; padding-bottom: 180px; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--gray); color: #333; padding-bottom: 200px; -webkit-tap-highlight-color: transparent; }
         
         header { background: var(--dark); color: white; text-align: center; padding: 30px 15px; border-bottom: 5px solid var(--accent); }
         .logo-circle { width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto 12px; border: 3px solid var(--accent); display: flex; align-items: center; justify-content: center; overflow: hidden; }
@@ -31,10 +31,6 @@
         .card-flex { display: flex; align-items: center; gap: 15px; }
         .card img { width: 75px; height: 75px; border-radius: 12px; object-fit: cover; background: #eee; }
         .card-info { flex-grow: 1; }
-
-        .sauce-selector { display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #ddd; }
-        .s-btn { flex: 1; padding: 10px; font-size: 0.75rem; border: 1px solid #ddd; border-radius: 8px; background: #fff; cursor: pointer; font-weight: 700; }
-        .s-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
 
         .counter { display: flex; align-items: center; justify-content: space-between; background: #f0f0f0; border-radius: 8px; padding: 3px; min-width: 90px; }
         .btn-c { width: 32px; height: 32px; border: none; background: white; border-radius: 6px; font-weight: 900; cursor: pointer; }
@@ -78,7 +74,9 @@
     <p style="font-size:0.85rem; line-height:1.6; opacity:0.8;">
         Готовлю с душой для каждого клиента!<br><br>
         Заказ принимается в работу после <b>100% предоплаты!</b><br><br>
-        Заказы до 23.00. Спортивная д. 1 п.2 (со двора).
+        В данный момент работаю по вечерам и в выходные. <br>
+        <b>ГОТОВЫЙ ЗАКАЗ ЗАБИРАЕМ:</b> ул. Спортивная д. 1 п.2 (со двора), подам в окошко. Заказы до 23.00.<br><br>
+        Доставки своей у меня пока нет, но в ПЛ есть много молодых ребят, которые вам доставят за не дорого, обращайтесь к ним на прямую;)
     </p>
 </div>
 
@@ -98,16 +96,16 @@
     const TOPS = [
         {n: "Пепперони", e: "🥓"}, {n: "Салями", e: "🍖"}, {n: "Ветчина", e: "🥩"}, 
         {n: "Бекон", e: "🥓"}, {n: "Курица", e: "🍗"}, {n: "Индейка", e: "🦃"}, 
-        {n: "Пармезан", e: "🧀"}, {n: "Чеддер", e: "🧀"}, {n: "Оливки", e: "🫒"}, 
-        {n: "Маслины", e: "🌑"}, {n: "Черри", e: "🍅"}, {n: "Халапеньо", e: "🌶️"}, 
-        {n: "Грибы", e: "🍄"}, {n: "Лук красный", e: "🧅"}, {n: "Лук фри", e: "🧅"}, 
-        {n: "Перец болгарский", e: "🫑"}, {n: "Огурцы маринованные", e: "🥒"}, {n: "Соус бешамель", e: "🍶"}
+        {n: "Пармезан", e: "🧀"}, {n: "Чеддер", e: "🧀"}, {n: "Сыр Российский", e: "🧀"},
+        {n: "Помидор", e: "🍅"}, {n: "Черри", e: "🍅"}, {n: "Оливки", e: "🫒"}, 
+        {n: "Маслины", e: "🌑"}, {n: "Халапеньо", e: "🌶️"}, {n: "Грибы", e: "🍄"}, 
+        {n: "Лук красный", e: "🧅"}, {n: "Лук фри", e: "🧅"}, {n: "Перец болгарский", e: "🫑"}, 
+        {n: "Огурцы маринованные", e: "🥒"}, {n: "Соус бешамель", e: "🍶"}
     ];
 
-    let cart = { tops: {}, ready: {0:0, 1:0}, snacks: {0:0, 1:0}, sauce: "Сырный" };
+    let cart = { tops: {}, ready: {}, snacks: {} };
 
     function render() {
-        // Отрисовка наполнителей
         document.getElementById('tops-grid').innerHTML = TOPS.map((obj, i) => {
             let q = cart.tops[i] || 0;
             return `<div class="item ${q > 0 ? 'active' : ''}" onclick="upd('tops', ${i}, 1)">
@@ -117,8 +115,10 @@
             </div>`;
         }).join('');
 
-        // Отрисовка готовых пицц
-        const rD = [{n:"Карбонара 35см", p:1500, img:"carbonara.jpg"}, {n:"Морской коктейль 35см", p:1500, img:"marine.jpg"}];
+        const rD = [
+            {n:"Карбонара 35см", p:1500, img:"carbonara.jpg"}, 
+            {n:"Морской коктейль 35см", p:1500, img:"marine.jpg"}
+        ];
         document.getElementById('ready-list').innerHTML = rD.map((item, i) => `
             <div class="card" onclick="upd('ready', ${i}, 1)">
                 <div class="card-flex">
@@ -128,20 +128,18 @@
                 </div>
             </div>`).join('');
 
-        // Отрисовка закусок
-        const sD = [{n:"Корн-Дог", p:250, img:"corndog.jpg"}, {n:"Корн-вафли (2 шт)", p:300, img:"Waffle.jpg"}];
+        const sD = [
+            {n:"Корн-Дог (Сырный)", p:250, img:"corndog.jpg"},
+            {n:"Корн-Дог (Горчичный)", p:250, img:"corndog.jpg"},
+            {n:"Корн-вафли (2 шт)", p:300, img:"Waffle.jpg"}
+        ];
         document.getElementById('snacks-list').innerHTML = sD.map((item, i) => `
-            <div class="card">
-                <div class="card-flex" onclick="upd('snacks', ${i}, 1)">
+            <div class="card" onclick="upd('snacks', ${i}, 1)">
+                <div class="card-flex">
                     <img src="${item.img}" onerror="this.src='https://via.placeholder.com/75?text=SNACK'">
                     <div class="card-info"><b>${item.n}</b><br><span style="color:var(--accent);font-weight:900;">${item.p}₽</span></div>
                     ${cart.snacks[i] > 0 ? `<div class="counter"><button class="btn-c" onclick="event.stopPropagation(); upd('snacks', ${i}, -1)">-</button><b>${cart.snacks[i]}</b><button class="btn-c" onclick="event.stopPropagation(); upd('snacks', ${i}, 1)">+</button></div>` : ''}
                 </div>
-                ${i === 0 && cart.snacks[i] > 0 ? `
-                <div class="sauce-selector">
-                    <button class="s-btn ${cart.sauce === 'Сырный' ? 'active' : ''}" onclick="cart.sauce='Сырный';render()">Сырный</button>
-                    <button class="s-btn ${cart.sauce === 'Горчичный' ? 'active' : ''}" onclick="cart.sauce='Горчичный';render()">Горчичный</button>
-                </div>` : ''}
             </div>`).join('');
         
         updateTotal();
@@ -155,11 +153,12 @@
 
     function updateTotal() {
         let total = 0, tCount = 0, hasT = false;
-        for(let i in cart.tops) { 
-            if(cart.tops[i] > 0) { total += cart.tops[i] * 100; tCount += cart.tops[i]; hasT = true; } 
-        }
+        for(let i in cart.tops) { if(cart.tops[i] > 0) { total += cart.tops[i] * 100; tCount += cart.tops[i]; hasT = true; } }
         if(hasT) total += 999;
-        total += (cart.ready[0] * 1500) + (cart.ready[1] * 1500) + (cart.snacks[0] * 250) + (cart.snacks[1] * 300);
+        
+        total += (cart.ready[0] || 0) * 1500 + (cart.ready[1] || 0) * 1500;
+        total += (cart.snacks[0] || 0) * 250 + (cart.snacks[1] || 0) * 250 + (cart.snacks[2] || 0) * 300;
+        
         document.getElementById('total-val').innerText = total;
         return { total, tCount, hasT };
     }
@@ -167,25 +166,21 @@
     function send(p) {
         const data = updateTotal();
         if(data.total === 0) return;
-        
-        if(data.hasT && data.tCount < 3) {
-            tg.showAlert("Для сборной пиццы выберите минимум 3 наполнителя!");
-            return;
-        }
+        if(data.hasT && data.tCount < 3) { tg.showAlert("Выберите минимум 3 наполнителя для пиццы!"); return; }
 
         let m = "🍕 *НОВЫЙ ЗАКАЗ IVANPIZZA*\n\n";
         if(data.hasT) {
             for(let i in cart.tops) if(cart.tops[i]>0) m += `▪️ ${TOPS[i].n} x${cart.tops[i]}\n`;
             m += `_Пицца 35см (основа): 999₽_\n\n`;
         }
-        if(cart.ready[0]>0) m += `🌟 *Карбонара 35см* x${cart.ready[0]}\n`;
+        if(cart.ready[0]>0) m += `🌟 *Карбонара* x${cart.ready[0]}\n`;
         if(cart.ready[1]>0) m += `🌟 *Морской коктейль* x${cart.ready[1]}\n`;
-        if(cart.snacks[0]>0) m += `🌭 *Корн-Дог* x${cart.snacks[0]} (Соус: ${cart.sauce})\n`;
-        if(cart.snacks[1]>0) m += `🧇 *Корн-вафли* x${cart.snacks[1]}\n`;
+        if(cart.snacks[0]>0) m += `🌭 *Корн-Дог (Сырный)* x${cart.snacks[0]}\n`;
+        if(cart.snacks[1]>0) m += `🌭 *Корн-Дог (Горчичный)* x${cart.snacks[1]}\n`;
+        if(cart.snacks[2]>0) m += `🧇 *Корн-вафли* x${cart.snacks[2]}\n`;
+        
         m += `\n💰 *ИТОГО: ${data.total}₽*`;
-        
         let url = p === 'tg' ? `https://t.me/IvanPizzaPrigorodLesnoe?text=${encodeURIComponent(m)}` : `https://wa.me/79997761075?text=${encodeURIComponent(m)}`;
-        
         window.open(url, '_blank');
     }
 
