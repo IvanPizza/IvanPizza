@@ -7,8 +7,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { --accent: #ff914d; --red: #e63946; --dark: #1a1a1a; --gray: #f4f4f4; --tg: #0088cc; --wa: #25d366; }
-        body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--gray); color: #333; padding-bottom: 220px; -webkit-tap-highlight-color: transparent; }
+        :root { --accent: #ff914d; --red: #e63946; --dark: #1a1a1a; --gray: #f4f4f4; }
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            background: var(--gray); 
+            color: #333; 
+            /* Убрали большой отступ снизу, оставили только под кнопку */
+            padding-bottom: 80px; 
+            -webkit-tap-highlight-color: transparent; 
+        }
         
         header { background: var(--dark); color: white; text-align: center; padding: 30px 15px; border-bottom: 5px solid var(--accent); }
         .logo-circle { width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto 12px; border: 3px solid var(--accent); display: flex; align-items: center; justify-content: center; overflow: hidden; }
@@ -40,10 +48,6 @@
         .btn-c { width: 32px; height: 32px; border: none; background: white; border-radius: 6px; font-weight: 900; cursor: pointer; }
 
         .info-block { background: var(--dark); color: white; padding: 40px 20px; text-align: left; margin-top: 30px; border-radius: 20px 20px 0 0; }
-        footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 20px; box-sizing: border-box; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); z-index: 1000; border-radius: 25px 25px 0 0; }
-        .total { font-size: 1.7rem; font-weight: 900; text-align: center; margin-bottom: 15px; color: var(--red); }
-        .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .btn-ord { text-decoration: none; padding: 16px; border-radius: 12px; text-align: center; color: white; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -62,7 +66,7 @@
 </header>
 
 <div class="container">
-    <div class="label">🍕 Пицца 35 см. Основа — 999₽</div>
+    <div class="label">🍕 Пицца 35 см. Основа — 1000₽</div>
     <div id="tops-grid" class="grid"></div>
 
     <div class="label">🌟 Готовые решения (35 см)</div>
@@ -83,18 +87,9 @@
     </p>
 </div>
 
-<footer>
-    <div class="total">ИТОГО: <span id="total-val">0</span>₽</div>
-    <div class="btns">
-        <button onclick="send('tg')" class="btn-ord" style="background:var(--tg)">Telegram</button>
-        <button onclick="send('wa')" class="btn-ord" style="background:var(--wa)">WhatsApp</button>
-    </div>
-</footer>
-
 <script>
-    // ИНИЦИАЛИЗАЦИЯ TG WEB APP
     const tg = window.Telegram.WebApp;
-    tg.expand(); // Раскрываем на весь экран
+    tg.expand();
     tg.ready();
 
     const TOPS = [
@@ -148,7 +143,6 @@
 
     function upd(t, i, d) { 
         cart[t][i] = Math.max(0, (cart[t][i] || 0) + d); 
-        // Легкая вибрация при клике
         if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
         render(); 
     }
@@ -158,31 +152,32 @@
         for(let i in cart.tops) { if(cart.tops[i]>0) { total += cart.tops[i]*100; tCount += cart.tops[i]; hasT = true; } }
         if(hasT) total += 999;
         total += (cart.ready[0]*1500) + (cart.ready[1]*1500) + (cart.snacks[0]*250) + (cart.snacks[1]*300);
-        document.getElementById('total-val').innerText = total;
 
-        // УПРАВЛЕНИЕ ГЛАВНОЙ КНОПКОЙ TG
+        // УПРАВЛЕНИЕ СИСТЕМНОЙ КНОПКОЙ TG
         if (total > 0) {
-            tg.MainButton.setText(`ОФОРМИТЬ ЗАКАЗ: ${total}₽`);
+            tg.MainButton.setText(`ЗАКАЗАТЬ: ${total}₽`);
             tg.MainButton.show();
-            tg.MainButton.onClick(() => send('tg'));
         } else {
             tg.MainButton.hide();
         }
-
         return tCount;
     }
 
-    function send(p) {
-        let total = document.getElementById('total-val').innerText;
-        if(total === "0") return;
+    // Слушатель нажатия на главную кнопку
+    tg.MainButton.onClick(() => send());
+
+    function send() {
+        let total = 0, hasT = false, tCount = 0;
+        for(let i in cart.tops) { if(cart.tops[i]>0) { total += cart.tops[i]*100; tCount += cart.tops[i]; hasT = true; } }
+        if(hasT) total += 999;
+        total += (cart.ready[0]*1500) + (cart.ready[1]*1500) + (cart.snacks[0]*250) + (cart.snacks[1]*300);
+
+        if(total === 0) return;
         
-        let tCount = 0;
         let m = "🍕 *НОВЫЙ ЗАКАЗ IVANPIZZA*\n\n";
-        let hasT = false;
+        let items = "";
         for(let i in cart.tops) if(cart.tops[i]>0) { 
-            m += `▪️ ${TOPS[i].n} x${cart.tops[i]}\n`; 
-            tCount += cart.tops[i];
-            hasT = true; 
+            items += `▪️ ${TOPS[i].n} x${cart.tops[i]}\n`; 
         }
         
         if(hasT && tCount < 3) {
@@ -190,20 +185,19 @@
             return;
         }
 
-        if(hasT) m += `_Пицца 35см (основа): 999₽_\n\n`;
+        if(hasT) m += items + `_Пицца 35см (основа): 999₽_\n\n`;
         if(cart.ready[0]>0) m += `🌟 *Карбонара 35см* x${cart.ready[0]} (1500₽)\n`;
         if(cart.ready[1]>0) m += `🌟 *Морской коктейль 35см* x${cart.ready[1]} (1500₽)\n`;
         if(cart.snacks[0]>0) m += `🌭 *Корн-Дог* x${cart.snacks[0]} (Соус: ${cart.sauce})\n`;
-        if(cart.snacks[1]>0) m += ` waffle *Корн-вафли* x${cart.snacks[1]}\n`;
+        if(cart.snacks[1]>0) m += `🧇 *Корн-вафли* x${cart.snacks[1]}\n`;
         m += `\n💰 *ИТОГО К ОПЛАТЕ: ${total}₽*`;
         
-        let url = p === 'tg' ? `https://t.me/IvanPizzaPrigorodLesnoe?text=${encodeURIComponent(m)}` : `https://wa.me/79997761075?text=${encodeURIComponent(m)}`;
+        let url = `https://t.me/IvanPizzaPrigorodLesnoe?text=${encodeURIComponent(m)}`;
         
-        // Подтверждение перед закрытием
         tg.showConfirm("Отправить заказ в чат?", (confirmed) => {
             if (confirmed) {
                 window.open(url, '_blank');
-                tg.close(); // Закрываем WebApp после заказа
+                tg.close(); 
             }
         });
     }
