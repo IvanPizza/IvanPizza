@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>IvanPizza</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root { --accent: #ff914d; --red: #e63946; --dark: #1a1a1a; --gray: #f4f4f4; --tg: #0088cc; --wa: #25d366; }
         body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--gray); color: #333; padding-bottom: 220px; -webkit-tap-highlight-color: transparent; }
@@ -22,7 +23,8 @@
         .label::before { content: ''; width: 4px; height: 18px; background: var(--accent); margin-right: 10px; }
 
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .item { background: white; padding: 12px; border-radius: 15px; border: 1px solid #ddd; cursor: pointer; position: relative; }
+        .item { background: white; padding: 12px; border-radius: 15px; border: 1px solid #ddd; cursor: pointer; position: relative; transition: transform 0.1s; }
+        .item:active { transform: scale(0.97); }
         .item.active { border-color: var(--accent); background: #fffcf9; }
         
         .card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 12px; border: 1px solid #eee; }
@@ -47,7 +49,7 @@
 <body>
 
 <header>
-    <div class="logo-circle"><img src="logo.jpg"></div>
+    <div class="logo-circle"><img src="logo.jpg" onerror="this.src='https://via.placeholder.com/80?text=Ivan'"></div>
     <h1>Ivan<span>Pizza</span></h1>
     <div class="header-desc">
         Привет соседи!)<br><br>
@@ -55,7 +57,7 @@
         1. Вкусное тесто, ручной замес, ферментированное!!!<br>
         2. Оригинальный томатный соус!!!<br>
         3. Натуральная Моцарелла, из молока без ЗМЖ !!!<br><br>
-        Вы выбираете по своему вкусу от 3шт. наполнители, а я соберу и выпеку Вашу идеальную пиццу !)
+        Вы выбираете на свой вкус от 3шт. наполнители, а я соберу и выпеку Вашу идеальную пиццу !)
     </div>
 </header>
 
@@ -90,13 +92,18 @@
 </footer>
 
 <script>
+    // ИНИЦИАЛИЗАЦИЯ TG WEB APP
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // Раскрываем на весь экран
+    tg.ready();
+
     const TOPS = [
         {n: "Пепперони", e: "🥓"}, {n: "Салями", e: "🍖"}, {n: "Ветчина", e: "🥩"}, 
         {n: "Бекон", e: "🥓"}, {n: "Курица", e: "🍗"}, {n: "Индейка", e: "🦃"}, 
         {n: "Пармезан", e: "🧀"}, {n: "Чеддер", e: "🧀"}, {n: "Оливки", e: "🫒"}, 
-        {n: "Маслины", e: "🌑"}, {n: "Помидор", e: "🍅"}, {n: "Халапеньо", e: "🌶️"}, 
+        {n: "Маслины", e: "🌑"}, {n: "Черри", e: "🍅"}, {n: "Халапеньо", e: "🌶️"}, 
         {n: "Грибы", e: "🍄"}, {n: "Лук красный", e: "🧅"}, {n: "Лук фри", e: "🧅"}, 
-        {n: "Перец болгарский", e: "🫑"}, {n: "Огурцы маринованные", e: "🥒"}, {n: "Томаты Черри", e: "🍒"}
+        {n: "Перец болгарский", e: "🫑"}, {n: "Огурцы маринованные", e: "🥒"}, {n: "Соус бешамель", e: "🍶"}
     ];
 
     let cart = { tops: {}, ready: {0:0, 1:0}, snacks: {0:0, 1:0}, sauce: "Сырный" };
@@ -139,7 +146,12 @@
         calc();
     }
 
-    function upd(t, i, d) { cart[t][i] = Math.max(0, (cart[t][i] || 0) + d); render(); }
+    function upd(t, i, d) { 
+        cart[t][i] = Math.max(0, (cart[t][i] || 0) + d); 
+        // Легкая вибрация при клике
+        if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+        render(); 
+    }
 
     function calc() {
         let total = 0, hasT = false, tCount = 0;
@@ -147,6 +159,16 @@
         if(hasT) total += 999;
         total += (cart.ready[0]*1500) + (cart.ready[1]*1500) + (cart.snacks[0]*250) + (cart.snacks[1]*300);
         document.getElementById('total-val').innerText = total;
+
+        // УПРАВЛЕНИЕ ГЛАВНОЙ КНОПКОЙ TG
+        if (total > 0) {
+            tg.MainButton.setText(`ОФОРМИТЬ ЗАКАЗ: ${total}₽`);
+            tg.MainButton.show();
+            tg.MainButton.onClick(() => send('tg'));
+        } else {
+            tg.MainButton.hide();
+        }
+
         return tCount;
     }
 
@@ -164,7 +186,7 @@
         }
         
         if(hasT && tCount < 3) {
-            alert("Для пиццы выберите минимум 3 наполнителя!");
+            tg.showAlert("Для пиццы выберите минимум 3 наполнителя!");
             return;
         }
 
@@ -172,11 +194,18 @@
         if(cart.ready[0]>0) m += `🌟 *Карбонара 35см* x${cart.ready[0]} (1500₽)\n`;
         if(cart.ready[1]>0) m += `🌟 *Морской коктейль 35см* x${cart.ready[1]} (1500₽)\n`;
         if(cart.snacks[0]>0) m += `🌭 *Корн-Дог* x${cart.snacks[0]} (Соус: ${cart.sauce})\n`;
-        if(cart.snacks[1]>0) m += `🧇 *Корн-вафли* x${cart.snacks[1]}\n`;
+        if(cart.snacks[1]>0) m += ` waffle *Корн-вафли* x${cart.snacks[1]}\n`;
         m += `\n💰 *ИТОГО К ОПЛАТЕ: ${total}₽*`;
         
         let url = p === 'tg' ? `https://t.me/IvanPizzaPrigorodLesnoe?text=${encodeURIComponent(m)}` : `https://wa.me/79997761075?text=${encodeURIComponent(m)}`;
-        window.open(url, '_blank');
+        
+        // Подтверждение перед закрытием
+        tg.showConfirm("Отправить заказ в чат?", (confirmed) => {
+            if (confirmed) {
+                window.open(url, '_blank');
+                tg.close(); // Закрываем WebApp после заказа
+            }
+        });
     }
     render();
 </script>
