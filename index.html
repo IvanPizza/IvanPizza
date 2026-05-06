@@ -13,8 +13,7 @@
             margin: 0; 
             background: var(--gray); 
             color: #333; 
-            /* Убрали большой отступ снизу, оставили только под кнопку */
-            padding-bottom: 80px; 
+            padding-bottom: 100px; 
             -webkit-tap-highlight-color: transparent; 
         }
         
@@ -66,7 +65,7 @@
 </header>
 
 <div class="container">
-    <div class="label">🍕 Пицца 35 см. Основа — 1000₽</div>
+    <div class="label">🍕 Пицца 35 см. Основа — 999₽</div>
     <div id="tops-grid" class="grid"></div>
 
     <div class="label">🌟 Готовые решения (35 см)</div>
@@ -118,17 +117,17 @@
             <div class="card ${cart.ready[i] > 0 ? 'active' : ''}" onclick="upd('ready', ${i}, 1)">
                 <div class="card-flex">
                     <img src="${item.img}" onerror="this.src='https://via.placeholder.com/75?text=PIZZA'">
-                    <div class="card-info"><b>${item.n}</b><span style="color:var(--accent);font-weight:900;">${item.p}₽</span></div>
+                    <div class="card-info"><b>${item.n}</b><br><span style="color:var(--accent);font-weight:900;">${item.p}₽</span></div>
                     ${cart.ready[i] > 0 ? `<div class="counter"><button class="btn-c" onclick="event.stopPropagation(); upd('ready', ${i}, -1)">-</button><b>${cart.ready[i]}</b><button class="btn-c" onclick="event.stopPropagation(); upd('ready', ${i}, 1)">+</button></div>` : ''}
                 </div>
             </div>`).join('');
 
         const sD = [{n:"Корн-Дог", p:250, img:"corndog.jpg"}, {n:"Корн-вафли (2 шт)", p:300, img:"Waffle.jpg"}];
         document.getElementById('snacks-list').innerHTML = sD.map((item, i) => `
-            <div class="card ${cart.snacks[i] > 0 ? 'active' : ''}">
+            <div class="card">
                 <div class="card-flex" onclick="upd('snacks', ${i}, 1)">
                     <img src="${item.img}" onerror="this.src='https://via.placeholder.com/75?text=SNACK'">
-                    <div class="card-info"><b>${item.n}</b><span style="color:var(--accent);font-weight:900;">${item.p}₽</span></div>
+                    <div class="card-info"><b>${item.n}</b><br><span style="color:var(--accent);font-weight:900;">${item.p}₽</span></div>
                     ${cart.snacks[i] > 0 ? `<div class="counter"><button class="btn-c" onclick="event.stopPropagation(); upd('snacks', ${i}, -1)">-</button><b>${cart.snacks[i]}</b><button class="btn-c" onclick="event.stopPropagation(); upd('snacks', ${i}, 1)">+</button></div>` : ''}
                 </div>
                 ${i === 0 && cart.snacks[i] > 0 ? `
@@ -147,60 +146,72 @@
         render(); 
     }
 
-    function calc() {
-        let total = 0, hasT = false, tCount = 0;
-        for(let i in cart.tops) { if(cart.tops[i]>0) { total += cart.tops[i]*100; tCount += cart.tops[i]; hasT = true; } }
+    function getFinalData() {
+        let total = 0, tCount = 0, hasT = false;
+        for(let i in cart.tops) { 
+            if(cart.tops[i] > 0) { 
+                total += cart.tops[i] * 100; 
+                tCount += cart.tops[i]; 
+                hasT = true; 
+            } 
+        }
         if(hasT) total += 999;
-        total += (cart.ready[0]*1500) + (cart.ready[1]*1500) + (cart.snacks[0]*250) + (cart.snacks[1]*300);
+        total += (cart.ready[0] * 1500) + (cart.ready[1] * 1500) + (cart.snacks[0] * 250) + (cart.snacks[1] * 300);
+        return { total, tCount, hasT };
+    }
 
-        // УПРАВЛЕНИЕ СИСТЕМНОЙ КНОПКОЙ TG
-        if (total > 0) {
-            tg.MainButton.setText(`ЗАКАЗАТЬ: ${total}₽`);
-            tg.MainButton.show();
+    function calc() {
+        const data = getFinalData();
+        if (data.total > 0) {
+            tg.MainButton.setParams({
+                text: `ЗАКАЗАТЬ: ${data.total}₽`,
+                is_visible: true,
+                is_active: true,
+                color: "#2ea6ff"
+            });
         } else {
             tg.MainButton.hide();
         }
-        return tCount;
     }
 
-    // Слушатель нажатия на главную кнопку
     tg.MainButton.onClick(() => send());
 
     function send() {
-        let total = 0, hasT = false, tCount = 0;
-        for(let i in cart.tops) { if(cart.tops[i]>0) { total += cart.tops[i]*100; tCount += cart.tops[i]; hasT = true; } }
-        if(hasT) total += 999;
-        total += (cart.ready[0]*1500) + (cart.ready[1]*1500) + (cart.snacks[0]*250) + (cart.snacks[1]*300);
-
-        if(total === 0) return;
+        const data = getFinalData();
+        if(data.total === 0) return;
         
-        let m = "🍕 *НОВЫЙ ЗАКАЗ IVANPIZZA*\n\n";
-        let items = "";
-        for(let i in cart.tops) if(cart.tops[i]>0) { 
-            items += `▪️ ${TOPS[i].n} x${cart.tops[i]}\n`; 
-        }
-        
-        if(hasT && tCount < 3) {
-            tg.showAlert("Для пиццы выберите минимум 3 наполнителя!");
+        if(data.hasT && data.tCount < 3) {
+            tg.showAlert("Для сборной пиццы выберите минимум 3 наполнителя! Сейчас выбрано: " + data.tCount);
             return;
         }
 
-        if(hasT) m += items + `_Пицца 35см (основа): 999₽_\n\n`;
-        if(cart.ready[0]>0) m += `🌟 *Карбонара 35см* x${cart.ready[0]} (1500₽)\n`;
-        if(cart.ready[1]>0) m += `🌟 *Морской коктейль 35см* x${cart.ready[1]} (1500₽)\n`;
-        if(cart.snacks[0]>0) m += `🌭 *Корн-Дог* x${cart.snacks[0]} (Соус: ${cart.sauce})\n`;
-        if(cart.snacks[1]>0) m += `🧇 *Корн-вафли* x${cart.snacks[1]}\n`;
-        m += `\n💰 *ИТОГО К ОПЛАТЕ: ${total}₽*`;
+        let m = "🍕 *НОВЫЙ ЗАКАЗ IVANPIZZA*\n\n";
+        let hasContent = false;
+
+        if(data.hasT) {
+            for(let i in cart.tops) {
+                if(cart.tops[i] > 0) m += `▪️ ${TOPS[i].n} x${cart.tops[i]}\n`;
+            }
+            m += `_Пицца 35см (основа): 999₽_\n\n`;
+            hasContent = true;
+        }
+
+        if(cart.ready[0] > 0) { m += `🌟 *Карбонара 35см* x${cart.ready[0]} (1500₽)\n`; hasContent = true; }
+        if(cart.ready[1] > 0) { m += `🌟 *Морской коктейль* x${cart.ready[1]} (1500₽)\n`; hasContent = true; }
+        if(cart.snacks[0] > 0) { m += `🌭 *Корн-Дог* x${cart.snacks[0]} (Соус: ${cart.sauce})\n`; hasContent = true; }
+        if(cart.snacks[1] > 0) { m += `🧇 *Корн-вафли* x${cart.snacks[1]}\n`; hasContent = true; }
         
-        let url = `https://t.me/IvanPizzaPrigorodLesnoe?text=${encodeURIComponent(m)}`;
+        m += `\n💰 *ИТОГО К ОПЛАТЕ: ${data.total}₽*`;
+        
+        const url = `https://t.me/IvanPizzaPrigorodLesnoe?text=${encodeURIComponent(m)}`;
         
         tg.showConfirm("Отправить заказ в чат?", (confirmed) => {
             if (confirmed) {
                 window.open(url, '_blank');
-                tg.close(); 
             }
         });
     }
+
     render();
 </script>
 </body>
