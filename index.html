@@ -8,25 +8,33 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root { --accent: #ff914d; --red: #e63946; --dark: #1a1a1a; --gray: #f4f4f4; --tg: #0088cc; }
-        body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--gray); color: #333; padding-bottom: 160px; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--gray); color: #333; padding-bottom: 180px; -webkit-tap-highlight-color: transparent; }
+        
         header { background: var(--dark); color: white; text-align: center; padding: 30px 15px; border-bottom: 5px solid var(--accent); }
         .logo-circle { width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto 12px; border: 3px solid var(--accent); display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .logo-circle img { width: 100%; height: 100%; object-fit: cover; }
         h1 { margin: 0; font-size: 1.8rem; font-weight: 900; text-transform: uppercase; }
         h1 span { color: var(--accent); }
+        
         .header-desc { font-size: 0.85rem; opacity: 0.9; margin-top: 15px; line-height: 1.5; font-weight: 400; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
+
         .container { max-width: 500px; margin: 0 auto; padding: 15px; }
         .label { font-weight: 900; text-transform: uppercase; font-size: 0.9rem; margin: 30px 0 15px; display: flex; align-items: center; }
         .label::before { content: ''; width: 4px; height: 18px; background: var(--accent); margin-right: 10px; }
+
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .item { background: white; padding: 12px; border-radius: 15px; border: 1px solid #ddd; cursor: pointer; transition: 0.1s; }
+        .item { background: white; padding: 12px; border-radius: 15px; border: 1px solid #ddd; cursor: pointer; position: relative; transition: transform 0.1s; }
+        .item:active { transform: scale(0.97); }
         .item.active { border-color: var(--accent); background: #fffcf9; }
-        .counter { display: flex; align-items: center; justify-content: space-between; background: #f0f0f0; border-radius: 8px; padding: 3px; margin-top: 10px; }
+        
+        .counter { display: flex; align-items: center; justify-content: space-between; background: #f0f0f0; border-radius: 8px; padding: 3px; min-width: 90px; }
         .btn-c { width: 32px; height: 32px; border: none; background: white; border-radius: 6px; font-weight: 900; cursor: pointer; }
+
         .info-block { background: var(--dark); color: white; padding: 40px 20px; text-align: left; margin-top: 30px; border-radius: 20px 20px 0 0; }
-        footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 15px 20px 25px; box-sizing: border-box; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); z-index: 1000; border-radius: 25px 25px 0 0; text-align: center; }
-        .total { font-size: 1.5rem; font-weight: 900; margin-bottom: 12px; color: var(--red); }
-        .btn-ord { width: 100%; padding: 16px; border-radius: 12px; color: white; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; background: var(--tg); }
+        
+        footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 15px 20px 25px; box-sizing: border-box; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); z-index: 1000; border-radius: 25px 25px 0 0; }
+        .total { font-size: 1.5rem; font-weight: 900; text-align: center; margin-bottom: 12px; color: var(--red); }
+        .btn-ord { width: 100%; padding: 16px; border-radius: 12px; text-align: center; color: white; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; background: var(--tg); display: block; }
     </style>
 </head>
 <body>
@@ -36,33 +44,35 @@
     <h1>Ivan<span>Pizza</span></h1>
     <div class="header-desc">
         Привет соседи!)<br><br>
-        Предлагаю для Вас пиццу на Ваш вкус. В основу (999₽) входит: тесто ручного замеса, томатный соус и натуральная Моцарелла.<br><br>
-        Выберите от 3-х наполнителей!
+        Предлагаю для Вас пиццу на Ваш вкус.<br>
+        В основу (999₽) уже входит: тесто ручного замеса, томатный соус и натуральная Моцарелла без ЗМЖ.<br><br>
+        Выбирайте от 3-х наполнителей!
     </div>
 </header>
 
 <div class="container">
-    <div class="label">🍕 Конструктор пиццы</div>
+    <div class="label">🍕 Пицца 35 см. Основа — 999₽</div>
     <div id="tops-grid" class="grid"></div>
 </div>
 
 <div class="info-block">
-    <b style="color:var(--accent); text-transform:uppercase; display:block; text-align:center; margin-bottom:15px;">ИНФОРМАЦИЯ</b>
+    <b style="color:var(--accent); text-transform:uppercase; display:block; text-align:center; margin-bottom:15px;">ВНИМАНИЕ</b>
     <p style="font-size:0.85rem; line-height:1.6; opacity:0.8;">
-        Заказ принимается в работу после 100% предоплаты!<br>
-        Работаю по вечерам и в выходные. Заказы до 23:00.<br>
+        Заказ принимается в работу после <b>100% предоплаты!</b><br><br>
+        Работаю по вечерам и в выходные. Заказы до 23.00.<br>
         <b>САМОВЫВОЗ:</b> ул. Спортивная д. 1 п.2 (со двора).
     </p>
 </div>
 
 <footer>
     <div class="total">ИТОГО: <span id="total-val">0</span>₽</div>
-    <button id="send-btn" class="btn-ord">Оформить в Telegram</button>
+    <button onclick="send()" class="btn-ord">Заказать через Telegram</button>
 </footer>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
+    tg.ready();
 
     const TOPS = [
         {n: "Пепперони", e: "🥓"}, {n: "Салями", e: "🍖"}, {n: "Ветчина", e: "🥩"}, 
@@ -77,70 +87,46 @@
     let cart = {};
 
     function render() {
-        const grid = document.getElementById('tops-grid');
-        grid.innerHTML = TOPS.map((obj, i) => {
-            const q = cart[i] || 0;
-            return `
-            <div class="item ${q > 0 ? 'active' : ''}" onclick="upd(${i}, 1)">
-                <span style="font-weight:700; font-size:0.8rem; display:block;">${obj.e} ${obj.n}</span>
-                <span style="color:var(--accent); font-weight:900;">100₽</span>
-                ${q > 0 ? `
-                <div class="counter">
-                    <button class="btn-c" onclick="event.stopPropagation(); upd(${i}, -1)">-</button>
-                    <b>${q}</b>
-                    <button class="btn-c" onclick="event.stopPropagation(); upd(${i}, 1)">+</button>
-                </div>` : ''}
+        document.getElementById('tops-grid').innerHTML = TOPS.map((obj, i) => {
+            let q = cart[i] || 0;
+            return `<div class="item ${q > 0 ? 'active' : ''}" onclick="upd(${i}, 1)">
+                <span style="font-weight:700;font-size:0.8rem;display:block;">${obj.e} ${obj.n}</span>
+                <span style="color:var(--accent);font-weight:900;font-size:0.85rem;">100₽</span>
+                ${q > 0 ? `<div class="counter" style="margin-top:10px"><button class="btn-c" onclick="event.stopPropagation(); upd(${i}, -1)">-</button><b>${q}</b><button class="btn-c" onclick="event.stopPropagation(); upd(${i}, 1)">+</button></div>` : ''}
             </div>`;
         }).join('');
-        
-        let total = 0;
-        let count = 0;
+        updateTotal();
+    }
+
+    function upd(i, d) { 
+        cart[i] = Math.max(0, (cart[i] || 0) + d); 
+        if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+        render(); 
+    }
+
+    function updateTotal() {
+        let total = 0, count = 0;
         for(let i in cart) { if(cart[i] > 0) { total += cart[i] * 100; count += cart[i]; } }
         if(count > 0) total += 999;
         document.getElementById('total-val').innerText = total;
+        return { total, count };
     }
 
-    function upd(i, d) {
-        cart[i] = Math.max(0, (cart[i] || 0) + d);
-        if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-        render();
-    }
+    function send() {
+        const data = updateTotal();
+        if(data.total === 0) { tg.showAlert("Выберите ингредиенты!"); return; }
+        if(data.count < 3) { tg.showAlert("Выберите минимум 3 наполнителя!"); return; }
 
-    document.getElementById('send-btn').addEventListener('click', () => {
-        let total = 0;
-        let count = 0;
-        let itemsText = "";
-        
+        let m = "🍕 *НОВЫЙ ЗАКАЗ IVANPIZZA*\n\n";
         for(let i in cart) {
-            if(cart[i] > 0) {
-                total += cart[i] * 100;
-                count += cart[i];
-                itemsText += `▪️ ${TOPS[i].n} x${cart[i]}\n`;
-            }
+            if(cart[i] > 0) m += `▪️ ${TOPS[i].n} x${cart[i]}\n`;
         }
-
-        if(count === 0) {
-            tg.showAlert("Выберите ингредиенты для пиццы!");
-            return;
-        }
-        if(count < 3) {
-            tg.showAlert("Выберите минимум 3 наполнителя!");
-            return;
-        }
-
-        total += 999;
-        let message = `🍕 *НОВЫЙ ЗАКАЗ IVANPIZZA*\n\n${itemsText}\n_Основа пиццы 35см: 999₽_\n💰 *ИТОГО: ${total}₽*`;
-
-        const url = `https://t.me/IvanPizzaPrigorodLesnoe?text=${encodeURIComponent(message)}`;
+        m += `\n_Пицца 35см (основа): 999₽_\n💰 *ИТОГО: ${data.total}₽*`;
         
-        // Попытка 1: Через метод TG
-        tg.openTelegramLink(url);
-        
-        // Попытка 2 (запасная): Если через 500мс мы все еще тут, пробуем редирект
-        setTimeout(() => {
-            window.location.href = url;
-        }, 500);
-    });
+        // Самый надежный метод для Telegram Mini Apps
+        const url = `https://t.me/IvanPizzaPrigorodLesnoe?text=${encodeURIComponent(m)}`;
+        tg.openLink(url, {try_instant_view: false});
+    }
 
     render();
 </script>
