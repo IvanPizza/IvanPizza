@@ -34,7 +34,7 @@
         
         footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 15px 20px 25px; box-sizing: border-box; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); z-index: 1000; border-radius: 25px 25px 0 0; }
         .total { font-size: 1.5rem; font-weight: 900; text-align: center; margin-bottom: 12px; color: var(--red); }
-        .btn-ord { width: 100%; padding: 16px; border-radius: 12px; text-align: center; color: white; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; background: var(--tg); display: block; text-decoration: none; }
+        .btn-ord { width: 100%; padding: 16px; border-radius: 12px; text-align: center; color: white; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; font-size: 1rem; background: var(--tg); display: block; }
     </style>
 </head>
 <body>
@@ -62,7 +62,7 @@
     <p style="font-size:0.85rem; line-height:1.6; opacity:0.8;">
         Готовлю с душой для каждого клиента!<br><br>
         Заказ принимается в работу после <b>100% предоплаты!</b><br><br>
-        В данный момент работаю по вечерам и в выходные. <br>
+        В данный момент работаю по вечерам и в выходные.<br>
         <b>ГОТОВЫЙ ЗАКАЗ ЗАБИРАЕМ:</b> ул. Спортивная д. 1 п.2 (со двора), подам в окошко. Заказы до 23.00.<br><br>
         Доставки своей у меня пока нет, но в ПЛ есть много молодых ребят, которые вам доставят за не дорого, обращайтесь к ним на прямую;)
     </p>
@@ -70,7 +70,7 @@
 
 <footer>
     <div class="total">ИТОГО: <span id="total-val">0</span>₽</div>
-    <a href="#" onclick="sendToTelegram(event)" class="btn-ord">Отправить заказ в Telegram</a>
+    <button id="main-btn" onclick="sendOrder()" class="btn-ord">Отправить заказ в Telegram</button>
 </footer>
 
 <script>
@@ -78,6 +78,7 @@
     tg.expand();
     tg.ready();
 
+    // Список топпингов из вашего утвержденного перечня
     const TOPS = [
         {n: "Пепперони", e: "🥓"}, {n: "Салями", e: "🍖"}, {n: "Ветчина", e: "🥩"}, 
         {n: "Бекон", e: "🥓"}, {n: "Курица", e: "🍗"}, {n: "Индейка", e: "🦃"}, 
@@ -116,12 +117,12 @@
         return { total, count };
     }
 
-    function sendToTelegram(e) {
-        e.preventDefault();
+    function sendOrder() {
         const data = updateTotal();
         
+        // Кнопка требует минимум 3 наполнителя
         if(data.count < 3) {
-            tg.showAlert("Для сборной пиццы выберите минимум 3 наполнителя!");
+            tg.showAlert("Выберите минимум 3 наполнителя!");
             return;
         }
 
@@ -131,10 +132,10 @@
         }
         m += `\n_Пицца 35см (основа): 999₽_\n💰 *ИТОГО: ${data.total}₽*`;
 
-        // Используем прямую ссылку на личный профиль
+        // Прямая ссылка в личные сообщения
         const url = `https://t.me/IvanPizzaPrigorodLesnoe?text=${encodeURIComponent(m)}`;
         
-        // Метод Telegram для открытия внешних ссылок
+        // Открываем через API Telegram
         tg.openTelegramLink(url);
     }
 
