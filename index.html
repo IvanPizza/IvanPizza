@@ -27,7 +27,7 @@
         .info-block { background: var(--dark); color: white; padding: 40px 20px; text-align: left; margin-top: 30px; border-radius: 20px 20px 0 0; }
         footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 15px 20px 25px; box-sizing: border-box; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); z-index: 1000; border-radius: 25px 25px 0 0; }
         .total { font-size: 1.5rem; font-weight: 900; text-align: center; margin-bottom: 12px; color: var(--red); }
-        .btn-ord { width: 100%; padding: 16px; border-radius: 12px; text-align: center; color: white; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; font-size: 1rem; background: var(--tg); display: block; }
+        .btn-ord { width: 100%; padding: 16px; border-radius: 12px; text-align: center; color: white; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; font-size: 1rem; background: var(--tg); display: block; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -63,7 +63,7 @@
 
 <footer>
     <div class="total">ИТОГО: <span id="total-val">0</span>₽</div>
-    <button onclick="sendOrder()" class="btn-ord">Оформить заказ</button>
+    <a id="order-link" href="javascript:void(0)" onclick="handleOrder()" class="btn-ord">Оформить заказ</a>
 </footer>
 
 <script>
@@ -78,7 +78,7 @@
         {n: "Помидор", e: "🍅"}, {n: "Черри", e: "🍅"}, {n: "Оливки", e: "🫒"}, 
         {n: "Маслины", e: "🌑"}, {n: "Халапеньо", e: "🌶️"}, {n: "Грибы", e: "🍄"}, 
         {n: "Лук красный", e: "🧅"}, {n: "Лук фри", e: "🧅"}, {n: "Перец болгарский", e: "🫑"}, 
-        {n: "Огурцы маринованные", e: "🥒"}, {n: "Соус сырный", e: "🍶"}
+        {n: "Огурцы маринованные", e: "🥒"}, {n: "Соус бешамель", e: "🍶"}
     ];
 
     let cart = {};
@@ -109,24 +109,27 @@
         return { total, count };
     }
 
-    function sendOrder() {
+    function handleOrder() {
         const data = updateTotal();
         if(data.count < 3) {
             tg.showAlert("Выберите минимум 3 наполнителя!");
             return;
         }
 
-        let m = "🍕 ЗАКАЗ IVANPIZZA\n\n";
+        let m = "🍕 *НОВЫЙ ЗАКАЗ IVANPIZZA*\n\n";
         for(let i in cart) {
             if(cart[i] > 0) m += `▪️ ${TOPS[i].n} x${cart[i]}\n`;
         }
-        m += `\n💰 ИТОГО: ${data.total}₽`;
+        m += `\n💰 *ИТОГО: ${data.total}₽*`;
 
-        // Используем системную ссылку, которая открывает ваш профиль напрямую с текстом
-        // Это самый "жесткий" способ заставить Telegram открыть личку
-        const url = `tg://resolve?domain=IvanPizzaPrigorodLesnoe&text=${encodeURIComponent(m)}`;
+        // Прямая ссылка. Если tg.openTelegramLink не сработает, используем обычный переход.
+        const url = `https://t.me/IvanPizzaPrigorodLesnoe?text=${encodeURIComponent(m)}`;
         
-        tg.openTelegramLink(url);
+        try {
+            tg.openTelegramLink(url);
+        } catch(e) {
+            window.location.href = url;
+        }
     }
 
     render();
