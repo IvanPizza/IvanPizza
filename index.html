@@ -34,7 +34,7 @@
         
         footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 15px 20px 25px; box-sizing: border-box; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); z-index: 1000; border-radius: 25px 25px 0 0; }
         .total { font-size: 1.5rem; font-weight: 900; text-align: center; margin-bottom: 12px; color: var(--red); }
-        .btn-ord { width: 100%; padding: 16px; border-radius: 12px; text-align: center; color: white; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; background: var(--tg); display: block; }
+        .btn-ord { width: 100%; padding: 16px; border-radius: 12px; text-align: center; color: white; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; background: var(--tg); display: block; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -70,7 +70,7 @@
 
 <footer>
     <div class="total">ИТОГО: <span id="total-val">0</span>₽</div>
-    <button onclick="send()" class="btn-ord">Оформить заказ</button>
+    <a href="#" onclick="sendToTelegram(event)" class="btn-ord">Отправить заказ в Telegram</a>
 </footer>
 
 <script>
@@ -116,20 +116,26 @@
         return { total, count };
     }
 
-    function send() {
+    function sendToTelegram(e) {
+        e.preventDefault();
         const data = updateTotal();
-        if(data.count === 0) { tg.showAlert("Выберите ингредиенты!"); return; }
-        if(data.count < 3) { tg.showAlert("Выберите минимум 3 наполнителя!"); return; }
+        
+        if(data.count < 3) {
+            tg.showAlert("Для сборной пиццы выберите минимум 3 наполнителя!");
+            return;
+        }
 
         let m = "🍕 *НОВЫЙ ЗАКАЗ IVANPIZZA*\n\n";
         for(let i in cart) {
             if(cart[i] > 0) m += `▪️ ${TOPS[i].n} x${cart[i]}\n`;
         }
-        m += `\n💰 *ИТОГО: ${data.total}₽*`;
+        m += `\n_Пицца 35см (основа): 999₽_\n💰 *ИТОГО: ${data.total}₽*`;
+
+        // Используем прямую ссылку на личный профиль
+        const url = `https://t.me/IvanPizzaPrigorodLesnoe?text=${encodeURIComponent(m)}`;
         
-        // САМОЕ ВАЖНОЕ: Метод sendData отправляет текст боту и закрывает окно.
-        // Это работает именно так, как вы привыкли с WhatsApp.
-        tg.sendData(m);
+        // Метод Telegram для открытия внешних ссылок
+        tg.openTelegramLink(url);
     }
 
     render();
