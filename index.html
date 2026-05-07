@@ -70,7 +70,7 @@
 
 <footer>
     <div class="total">ИТОГО: <span id="total-val">0</span>₽</div>
-    <button onclick="send()" class="btn-ord">Отправить в Telegram</button>
+    <button onclick="sendOrder()" class="btn-ord">Отправить заказ в Telegram</button>
 </footer>
 
 <script>
@@ -85,55 +85,83 @@
         {n: "Помидор", e: "🍅"}, {n: "Черри", e: "🍅"}, {n: "Оливки", e: "🫒"}, 
         {n: "Маслины", e: "🌑"}, {n: "Халапеньо", e: "🌶️"}, {n: "Грибы", e: "🍄"}, 
         {n: "Лук красный", e: "🧅"}, {n: "Лук фри", e: "🧅"}, {n: "Перец болгарский", e: "🫑"}, 
-        {n: "Огурцы маринованные", e: "🥒"}, {n: "Сырный соус", e: "🍶"}
+        {n: "Огурцы маринованные", e: "🥒"}, {n: "Соус бешамель", e: "🍶"}
     ];
 
     let cart = { tops: {} };
 
     function render() {
-        document.getElementById('tops-grid').innerHTML = TOPS.map((obj, i) => {
-            let q = cart.tops[i] || 0;
-            return `<div class="item ${q > 0 ? 'active' : ''}" onclick="upd('tops', ${i}, 1)">
+        const grid = document.getElementById('tops-grid');
+        grid.innerHTML = TOPS.map((obj, i) => {
+            const q = cart.tops[i] || 0;
+            return `
+            <div class="item ${q > 0 ? 'active' : ''}" onclick="upd(${i}, 1)">
                 <span style="font-weight:700;font-size:0.8rem;display:block;">${obj.e} ${obj.n}</span>
                 <span style="color:var(--accent);font-weight:900;font-size:0.85rem;">100₽</span>
-                ${q > 0 ? `<div class="counter" style="margin-top:10px"><button class="btn-c" onclick="event.stopPropagation(); upd('tops', ${i}, -1)">-</button><b>${q}</b><button class="btn-c" onclick="event.stopPropagation(); upd('tops', ${i}, 1)">+</button></div>` : ''}
+                ${q > 0 ? `
+                <div class="counter" style="margin-top:10px">
+                    <button class="btn-c" onclick="event.stopPropagation(); upd(${i}, -1)">-</button>
+                    <b>${q}</b>
+                    <button class="btn-c" onclick="event.stopPropagation(); upd(${i}, 1)">+</button>
+                </div>` : ''}
             </div>`;
         }).join('');
         
-        updateTotal();
+        updateTotalDisplay();
     }
 
-    function upd(t, i, d) { 
-        cart[t][i] = Math.max(0, (cart[t][i] || 0) + d); 
+    function upd(i, d) { 
+        cart.tops[i] = Math.max(0, (cart.tops[i] || 0) + d); 
         if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
         render(); 
     }
 
-    function updateTotal() {
-        let total = 0, tCount = 0, hasT = false;
-        for(let i in cart.tops) { if(cart.tops[i] > 0) { total += cart.tops[i] * 100; tCount += cart.tops[i]; hasT = true; } }
-        if(hasT) total += 999;
-        
-        document.getElementById('total-val').innerText = total;
-        return { total, tCount, hasT };
-    }
-
-    function send() {
-        const data = updateTotal();
-        if(data.total === 0) return;
-        if(data.hasT && data.tCount < 3) { tg.showAlert("Выберите минимум 3 наполнителя для пиццы!"); return; }
-
-        let m = "🍕 *НОВЫЙ ЗАКАЗ IVANPIZZA*\n\n";
-        if(data.hasT) {
-            for(let i in cart.tops) if(cart.tops[i]>0) m += `▪️ ${TOPS[i].n} x${cart.tops[i]}\n`;
-            m += `_Пицца 35см (основа): 999₽_\n\n`;
+    function calculateTotal() {
+        let total = 0;
+        let count = 0;
+        for(let i in cart.tops) {
+            if(cart.tops[i] > 0) {
+                total += cart.tops[i] * 100;
+                count += cart.tops[i];
+            }
         }
-        
-        m += `💰 *ИТОГО: ${data.total}₽*`;
-        let url = `https://t.me/IvanPizzaPrigorodLesnoe?text=${encodeURIComponent(m)}`;
-        window.open(url, '_blank');
+        if(count > 0) total += 999; // Добавляем основу только если выбраны топы
+        return { total, count };
     }
 
+    function updateTotalDisplay() {
+        const data = calculateTotal();
+        document.getElementById('total-val').innerText = data.total;
+    }
+
+    function sendOrder() {
+        const data = calculateTotal();
+        
+        if(data.total === 0) {
+            tg.showAlert("Сначала выберите ингредиенты!");
+            return;
+        }
+
+        if(data.count < 3) {
+            tg.showAlert("Для сборной пиццы выберите минимум 3 наполнителя! Сейчас выбрано: " + data.count);
+            return;
+        }
+
+        let message = "🍕 *НОВЫЙ ЗАКАЗ IVANPIZZA*\n\n";
+        for(let i in cart.tops) {
+            if(cart.tops[i] > 0) {
+                message += `▪️ ${TOPS[i].n} x${cart.tops[i]}\n`;
+            }
+        }
+        message += `\n_Пицца 35см (основа): 999₽_\n`;
+        message += `💰 *ИТОГО К ОПЛАТЕ: ${data.total}₽*`;
+
+        // Специальный метод Telegram для открытия ссылок внутри приложения
+        const link = `https://t.me/IvanPizzaPrigorodLesnoe?text=${encodeURIComponent(message)}`;
+        tg.openTelegramLink(link);
+    }
+
+    // Инициализация
     render();
 </script>
 </body>
