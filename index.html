@@ -70,7 +70,7 @@
 
 <footer>
     <div class="total">ИТОГО: <span id="total-val">0</span>₽</div>
-    <button onclick="send()" class="btn-ord">Отправить заказ в Telegram</button>
+    <button onclick="send()" class="btn-ord">Оформить заказ</button>
 </footer>
 
 <script>
@@ -85,7 +85,7 @@
         {n: "Помидор", e: "🍅"}, {n: "Черри", e: "🍅"}, {n: "Оливки", e: "🫒"}, 
         {n: "Маслины", e: "🌑"}, {n: "Халапеньо", e: "🌶️"}, {n: "Грибы", e: "🍄"}, 
         {n: "Лук красный", e: "🧅"}, {n: "Лук фри", e: "🧅"}, {n: "Перец болгарский", e: "🫑"}, 
-        {n: "Огурцы маринованные", e: "🥒"}, {n: "Сырный соус", e: "🍶"}
+        {n: "Огурцы маринованные", e: "🥒"}, {n: "Соус сырный", e: "🍶"}
     ];
 
     let cart = {};
@@ -125,13 +125,11 @@
         for(let i in cart) {
             if(cart[i] > 0) m += `▪️ ${TOPS[i].n} x${cart[i]}\n`;
         }
-        m += `\n_Пицца 35см (основа): 999₽_\n💰 *ИТОГО: ${data.total}₽*`;
+        m += `\n💰 *ИТОГО: ${data.total}₽*`;
         
-        // ВАЖНО: Используем прямую ссылку на ваш профиль
-        const url = `https://t.me/IvanPizzaPrigorodLesnoe?text=${encodeURIComponent(m)}`;
-        
-        // Метод для открытия внешних ссылок в Telegram
-        tg.openTelegramLink(url);
+        // САМОЕ ВАЖНОЕ: Метод sendData отправляет текст боту и закрывает окно.
+        // Это работает именно так, как вы привыкли с WhatsApp.
+        tg.sendData(m);
     }
 
     render();
