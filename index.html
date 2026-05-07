@@ -7,8 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { --accent: #ff914d; --red: #e63946; --dark: #1a1a1a; --gray: #f4f4f4; --tg: #0088cc; --wa: #25d366; }
-        body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--gray); color: #333; padding-bottom: 200px; -webkit-tap-highlight-color: transparent; }
+        :root { --accent: #ff914d; --red: #e63946; --dark: #1a1a1a; --gray: #f4f4f4; --tg: #0088cc; }
+        body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--gray); color: #333; padding-bottom: 160px; -webkit-tap-highlight-color: transparent; }
         
         header { background: var(--dark); color: white; text-align: center; padding: 30px 15px; border-bottom: 5px solid var(--accent); }
         .logo-circle { width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto 12px; border: 3px solid var(--accent); display: flex; align-items: center; justify-content: center; overflow: hidden; }
@@ -27,11 +27,6 @@
         .item:active { transform: scale(0.97); }
         .item.active { border-color: var(--accent); background: #fffcf9; }
         
-        .card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 12px; border: 1px solid #eee; }
-        .card-flex { display: flex; align-items: center; gap: 15px; }
-        .card img { width: 75px; height: 75px; border-radius: 12px; object-fit: cover; background: #eee; }
-        .card-info { flex-grow: 1; }
-
         .counter { display: flex; align-items: center; justify-content: space-between; background: #f0f0f0; border-radius: 8px; padding: 3px; min-width: 90px; }
         .btn-c { width: 32px; height: 32px; border: none; background: white; border-radius: 6px; font-weight: 900; cursor: pointer; }
 
@@ -39,8 +34,7 @@
         
         footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 15px 20px 25px; box-sizing: border-box; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); z-index: 1000; border-radius: 25px 25px 0 0; }
         .total { font-size: 1.5rem; font-weight: 900; text-align: center; margin-bottom: 12px; color: var(--red); }
-        .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .btn-ord { text-decoration: none; padding: 14px; border-radius: 12px; text-align: center; color: white; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
+        .btn-ord { width: 100%; text-decoration: none; padding: 16px; border-radius: 12px; text-align: center; color: white; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; background: var(--tg); display: block; }
     </style>
 </head>
 <body>
@@ -61,12 +55,6 @@
 <div class="container">
     <div class="label">🍕 Пицца 35 см. Основа — 999₽</div>
     <div id="tops-grid" class="grid"></div>
-
-    <div class="label">🌟 Готовые решения (35 см)</div>
-    <div id="ready-list"></div>
-
-    <div class="label">🌭 Закуски и Десерты</div>
-    <div id="snacks-list"></div>
 </div>
 
 <div class="info-block">
@@ -82,10 +70,7 @@
 
 <footer>
     <div class="total">ИТОГО: <span id="total-val">0</span>₽</div>
-    <div class="btns">
-        <button onclick="send('tg')" class="btn-ord" style="background:var(--tg)">Telegram</button>
-        <button onclick="send('wa')" class="btn-ord" style="background:var(--wa)">WhatsApp</button>
-    </div>
+    <button onclick="send()" class="btn-ord">Отправить в Telegram</button>
 </footer>
 
 <script>
@@ -103,7 +88,7 @@
         {n: "Огурцы маринованные", e: "🥒"}, {n: "Соус бешамель", e: "🍶"}
     ];
 
-    let cart = { tops: {}, ready: {}, snacks: {} };
+    let cart = { tops: {} };
 
     function render() {
         document.getElementById('tops-grid').innerHTML = TOPS.map((obj, i) => {
@@ -114,33 +99,6 @@
                 ${q > 0 ? `<div class="counter" style="margin-top:10px"><button class="btn-c" onclick="event.stopPropagation(); upd('tops', ${i}, -1)">-</button><b>${q}</b><button class="btn-c" onclick="event.stopPropagation(); upd('tops', ${i}, 1)">+</button></div>` : ''}
             </div>`;
         }).join('');
-
-        const rD = [
-            {n:"Карбонара 35см", p:1500, img:"carbonara.jpg"}, 
-            {n:"Морской коктейль 35см", p:1500, img:"marine.jpg"}
-        ];
-        document.getElementById('ready-list').innerHTML = rD.map((item, i) => `
-            <div class="card" onclick="upd('ready', ${i}, 1)">
-                <div class="card-flex">
-                    <img src="${item.img}" onerror="this.src='https://via.placeholder.com/75?text=PIZZA'">
-                    <div class="card-info"><b>${item.n}</b><br><span style="color:var(--accent);font-weight:900;">${item.p}₽</span></div>
-                    ${cart.ready[i] > 0 ? `<div class="counter"><button class="btn-c" onclick="event.stopPropagation(); upd('ready', ${i}, -1)">-</button><b>${cart.ready[i]}</b><button class="btn-c" onclick="event.stopPropagation(); upd('ready', ${i}, 1)">+</button></div>` : ''}
-                </div>
-            </div>`).join('');
-
-        const sD = [
-            {n:"Корн-Дог (Сырный)", p:250, img:"corndog.jpg"},
-            {n:"Корн-Дог (Горчичный)", p:250, img:"corndog.jpg"},
-            {n:"Корн-вафли (2 шт)", p:300, img:"Waffle.jpg"}
-        ];
-        document.getElementById('snacks-list').innerHTML = sD.map((item, i) => `
-            <div class="card" onclick="upd('snacks', ${i}, 1)">
-                <div class="card-flex">
-                    <img src="${item.img}" onerror="this.src='https://via.placeholder.com/75?text=SNACK'">
-                    <div class="card-info"><b>${item.n}</b><br><span style="color:var(--accent);font-weight:900;">${item.p}₽</span></div>
-                    ${cart.snacks[i] > 0 ? `<div class="counter"><button class="btn-c" onclick="event.stopPropagation(); upd('snacks', ${i}, -1)">-</button><b>${cart.snacks[i]}</b><button class="btn-c" onclick="event.stopPropagation(); upd('snacks', ${i}, 1)">+</button></div>` : ''}
-                </div>
-            </div>`).join('');
         
         updateTotal();
     }
@@ -156,14 +114,11 @@
         for(let i in cart.tops) { if(cart.tops[i] > 0) { total += cart.tops[i] * 100; tCount += cart.tops[i]; hasT = true; } }
         if(hasT) total += 999;
         
-        total += (cart.ready[0] || 0) * 1500 + (cart.ready[1] || 0) * 1500;
-        total += (cart.snacks[0] || 0) * 250 + (cart.snacks[1] || 0) * 250 + (cart.snacks[2] || 0) * 300;
-        
         document.getElementById('total-val').innerText = total;
         return { total, tCount, hasT };
     }
 
-    function send(p) {
+    function send() {
         const data = updateTotal();
         if(data.total === 0) return;
         if(data.hasT && data.tCount < 3) { tg.showAlert("Выберите минимум 3 наполнителя для пиццы!"); return; }
@@ -173,14 +128,9 @@
             for(let i in cart.tops) if(cart.tops[i]>0) m += `▪️ ${TOPS[i].n} x${cart.tops[i]}\n`;
             m += `_Пицца 35см (основа): 999₽_\n\n`;
         }
-        if(cart.ready[0]>0) m += `🌟 *Карбонара* x${cart.ready[0]}\n`;
-        if(cart.ready[1]>0) m += `🌟 *Морской коктейль* x${cart.ready[1]}\n`;
-        if(cart.snacks[0]>0) m += `🌭 *Корн-Дог (Сырный)* x${cart.snacks[0]}\n`;
-        if(cart.snacks[1]>0) m += `🌭 *Корн-Дог (Горчичный)* x${cart.snacks[1]}\n`;
-        if(cart.snacks[2]>0) m += `🧇 *Корн-вафли* x${cart.snacks[2]}\n`;
         
-        m += `\n💰 *ИТОГО: ${data.total}₽*`;
-        let url = p === 'tg' ? `https://t.me/IvanPizzaPrigorodLesnoe?text=${encodeURIComponent(m)}` : `https://wa.me/79997761075?text=${encodeURIComponent(m)}`;
+        m += `💰 *ИТОГО: ${data.total}₽*`;
+        let url = `https://t.me/IvanPizzaPrigorodLesnoe?text=${encodeURIComponent(m)}`;
         window.open(url, '_blank');
     }
 
